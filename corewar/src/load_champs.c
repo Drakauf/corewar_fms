@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:13:43 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/20 13:02:37 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/22 12:06:16 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -29,6 +29,9 @@ void	read_champ(struct s_vm *vm, int p, int fd)
 	int		i;
 
 	read(fd, &(vm->headers[p].magic), 4);
+	reverse(&(vm->headers[p].magic));
+	if (vm->headers[p].magic != COREWAR_MAGIC)
+		exit((ft_printf("\e[31;1mError\e[0m: invalid magic number\n") & 1) | 1);
 	if (!(vm->headers[p].prog_name = (char *)malloc(PROG_NAME_LEN + 1)))
 		exit((ft_printf("\e[31;1mError\e[0m: %s\n", strerror(ENOMEM)) & 1) | 1);
 	if (!(vm->headers[p].comment = (char *)malloc(COMMENT_LEN + 1)))
@@ -49,8 +52,8 @@ void	read_champ(struct s_vm *vm, int p, int fd)
 	i = 0;
 	while (read(fd, vm->arena + vm->aspace * p + i, 1) == 1 && i < vm->headers[p].prog_size)
 		i++;
-	if (i != vm->headers[p].prog_size)
-		exit((ft_printf("\e[31;1mError\e[0m: champ smaller than header info (%d)\n", i) & 1) | 1);
+	if (i != vm->headers[p].prog_size || read(fd, &i, 1))
+		exit((ft_printf("\e[31;1mError\e[0m: champ size != header info (%d)\n", i) & 1) | 1);
 	ft_memset(vm->ainfo + vm->aspace * p, p + 1, vm->headers[p].prog_size);
 }
 
