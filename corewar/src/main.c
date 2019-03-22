@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 12:07:03 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/20 16:56:48 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/22 13:51:21 by shthevak    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -74,10 +74,18 @@ void	exit_usage(char *progname)
 {
 	ft_printf("%s [-dump ncycles] [-graphic] [[-n number] champ1.cor ...]\n",
 			progname);
-	ft_printf("\n -dump ncycles: dumps memory after ncycles executed\n");
-	ft_printf(" -graphic: toggles graphic view (SDL2)\n");
-	ft_printf(" -n number: specifies champ number, otherwise the next free "
+	ft_printf("\t-dump ncycles\t: dumps memory after ncycles executed\n");
+	ft_printf("\t-graphic\t: toggles graphic view (SDL2)\n");
+	ft_printf("\t-n number\t: specifies champ number, otherwise the next free "
 			"is used\n");
+	ft_printf("\t-v number\t: Verbosity levels, can be added together");
+	ft_printf(" to enable several\n");
+	ft_printf("\t\t\t - 0 : show only essentials\n");
+	ft_printf("\t\t\t - 1 : show lives\n");
+	ft_printf("\t\t\t - 2 : show cycles\n");
+	ft_printf("\t\t\t - 4 : show operations\n");
+	ft_printf("\t\t\t - 8 : show deaths\n");
+	ft_printf("\t\t\t - 16 : show PC movements\n");
 	ft_printf(" champ1.cor: champ source binary\n");
 	exit(0);
 }

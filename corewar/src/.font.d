@@ -1,47 +1,17 @@
-obj/font.o: src/font.c inc/op.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_main.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_stdinc.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_config.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_platform.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/begin_code.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/close_code.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_assert.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_atomic.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_audio.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_error.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_endian.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_mutex.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_thread.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_rwops.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_clipboard.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_cpuinfo.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_events.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_video.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_pixels.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_rect.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_surface.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_blendmode.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_keyboard.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_keycode.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_scancode.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_mouse.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_joystick.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_gamecontroller.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_quit.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_gesture.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_touch.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_filesystem.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_haptic.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_hints.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_loadso.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_log.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_messagebox.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_power.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_render.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_sensor.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_shape.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_system.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_timer.h \
-  /Users/mhouppin/Documents/bin/local/include/SDL2/SDL_version.h \
+obj/font.o: src/font.c inc/op.h inc/SDL2/SDL.h inc/SDL2/SDL_main.h \
+  inc/SDL2/SDL_stdinc.h inc/SDL2/SDL_config.h inc/SDL2/SDL_platform.h \
+  inc/SDL2/begin_code.h inc/SDL2/close_code.h inc/SDL2/SDL_assert.h \
+  inc/SDL2/SDL_atomic.h inc/SDL2/SDL_audio.h inc/SDL2/SDL_error.h \
+  inc/SDL2/SDL_endian.h inc/SDL2/SDL_mutex.h inc/SDL2/SDL_thread.h \
+  inc/SDL2/SDL_rwops.h inc/SDL2/SDL_clipboard.h inc/SDL2/SDL_cpuinfo.h \
+  inc/SDL2/SDL_events.h inc/SDL2/SDL_video.h inc/SDL2/SDL_pixels.h \
+  inc/SDL2/SDL_rect.h inc/SDL2/SDL_surface.h inc/SDL2/SDL_blendmode.h \
+  inc/SDL2/SDL_keyboard.h inc/SDL2/SDL_keycode.h inc/SDL2/SDL_scancode.h \
+  inc/SDL2/SDL_mouse.h inc/SDL2/SDL_joystick.h \
+  inc/SDL2/SDL_gamecontroller.h inc/SDL2/SDL_quit.h \
+  inc/SDL2/SDL_gesture.h inc/SDL2/SDL_touch.h inc/SDL2/SDL_filesystem.h \
+  inc/SDL2/SDL_haptic.h inc/SDL2/SDL_hints.h inc/SDL2/SDL_loadso.h \
+  inc/SDL2/SDL_log.h inc/SDL2/SDL_messagebox.h inc/SDL2/SDL_power.h \
+  inc/SDL2/SDL_render.h inc/SDL2/SDL_sensor.h inc/SDL2/SDL_shape.h \
+  inc/SDL2/SDL_system.h inc/SDL2/SDL_timer.h inc/SDL2/SDL_version.h \
   libft/libft.h

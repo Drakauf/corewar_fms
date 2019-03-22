@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 13:33:50 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 11:44:46 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/22 13:51:19 by shthevak    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -202,7 +202,7 @@ int		do_aff(unsigned char c, struct s_proc *p, struct s_vm *vm)
 {
 	p->last_op = *((unsigned char *)vm->arena + ((p->pcount + 1) % MEM_SIZE));
 	get_param1(p, vm, 64U, p->pcount + 2);
-	p->cooldown = 6;
+	p->cooldown = 2;
 	return (1);
 }
 

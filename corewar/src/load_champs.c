@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:13:43 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 12:06:16 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/22 13:51:22 by shthevak    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -55,21 +55,6 @@ void	read_champ(struct s_vm *vm, int p, int fd)
 	if (i != vm->headers[p].prog_size || read(fd, &i, 1))
 		exit((ft_printf("\e[31;1mError\e[0m: champ size != header info (%d)\n", i) & 1) | 1);
 	ft_memset(vm->ainfo + vm->aspace * p, p + 1, vm->headers[p].prog_size);
-}
-
-int		checksum(void *arena)
-{
-	int		i;
-	int		r;
-
-	i = 0;
-	r = 0;
-	while (i < MEM_SIZE)
-	{
-		r += *((char *)arena + i);
-		i++;
-	}
-	return (r);
 }
 
 void	load_champs(struct s_vm *vm)
