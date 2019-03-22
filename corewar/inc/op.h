@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 11:17:29 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 11:13:50 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/22 13:19:32 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -107,6 +107,7 @@ struct	s_vdata
 	SDL_Window		*win;
 	SDL_Renderer	*rd;
 	SDL_Texture		*tx;
+	SDL_Event		ev;
 	int				*px;
 	int				pitch;
 	int				sx;
@@ -145,7 +146,6 @@ struct	s_vm
 	int				players;
 	int				flags;
 	struct s_header	headers[MAX_PLAYERS];
-	FILE			*f;
 };
 
 typedef int		(*t_exec)(struct s_vm *, struct s_proc *);
@@ -161,5 +161,6 @@ struct s_proc	*fresh_process(struct s_vm *vm, int pn, int pc);
 void	cw_init_window(struct s_vdata *data);
 void	cw_update_window(struct s_vm *vm);
 int		**load_font(void);
+struct s_vm **get_vmp(void);
 
 #endif
