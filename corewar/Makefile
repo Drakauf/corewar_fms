@@ -6,7 +6,7 @@
 #    By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2019/02/25 16:43:57 by mhouppin     #+#   ##    ##    #+#        #
-#    Updated: 2019/03/22 09:17:12 by mhouppin    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/03/22 12:11:55 by mhouppin    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -15,8 +15,8 @@ SHELL     = bash
 NAME     := corewar
 OBJ_DIR  := obj
 SRC_DIR  := src
-INC_DIR  := inc:/Users/mhouppin/Documents/bin/local/include:libft
-BIN_DIR  := /Users/mhouppin/Documents/bin/lib/lib/
+INC_DIR  := inc:libft
+BIN_DIR  := bin
 LIB      := libft
 ARCHIVE  := $(LIB)/libft.a
 SOURCES  := $(wildcard ${SRC_DIR}/*.c)
