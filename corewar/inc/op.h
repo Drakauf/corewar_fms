@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 11:17:29 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 13:19:32 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/22 16:46:53 by shthevak    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -45,6 +45,7 @@
 
 # define F_DUMP			0x1
 # define F_GRAPH		0x2
+# define F_VERB			0x3
 
 # define MEM_LINES		64
 # define MEM_COLS		64
@@ -146,10 +147,11 @@ struct	s_vm
 	int				players;
 	int				flags;
 	struct s_header	headers[MAX_PLAYERS];
+	int				verbose;
 };
 
 typedef int		(*t_exec)(struct s_vm *, struct s_proc *);
-
+/*
 int		get_champ_num(struct s_vm *vm);
 
 void	launch_corewar(struct s_vm *vm);
@@ -162,5 +164,54 @@ void	cw_init_window(struct s_vdata *data);
 void	cw_update_window(struct s_vm *vm);
 int		**load_font(void);
 struct s_vm **get_vmp(void);
+*/
+
+/*
+** parsing.c
+*/
+
+void				parse_argument(struct s_vm *vm, char **argv, int *ip);
+void				exit_usage(char *progname);
+
+/*
+** struct.c
+*/
+
+struct s_vm			**get_vmp(void);
+void				destroy_vm(void) __attribute__((destructor));
+void				destroy_vdata(struct s_vdata *data);
+
+/*
+** load_champs.c
+*/
+
+void				load_champs(struct s_vm *vm);
+void				read_champs(struct s_vm *vm, int p, int fd);
+int					get_champ_num(struct s_vm *vm);
+void				next_player(struct s_vm *vm, char *player);
+void				add_champs(struct s_vm *vm, char **argv, int i);
+
+/*
+** tools.c
+*/
+
+void				reverse(unsigned int *a);
+
+/*
+** launch_corewar.c 
+*/
+
+void				launch_corewar(struct s_vm *vm);
+void				init_params(struct s_vm *vm);
+
+/*
+** process.c
+*/
+
+void				create_process(struct s_vm *vm);
+void				kill_process(struct s_proc **proc, struct s_proc **vm,\
+					struct s_proc *last);
+void				fork_process(struct s_vm *vm, struct s_proc *proc, int param);
+struct s_proc		*fresh_process(struct s_vm *vm, int pn, int pc);
 
 #endif

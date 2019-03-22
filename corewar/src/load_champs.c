@@ -6,22 +6,69 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:13:43 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 13:53:20 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/22 15:59:06 by shthevak    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "op.h"
 
-void	reverse(unsigned int *a)
+void	next_player(struct s_vm *vm, char *player)
 {
-	unsigned int	swap;
+	int		i;
 
-	swap = ((*a >> 24) & 255) << 0;
-	swap |= ((*a >> 16) & 255) << 8;
-	swap |= ((*a >> 8) & 255) << 16;
-	swap |= ((*a >> 0) & 255) << 24;
-	*a = swap;
+	i = 0;
+	while (i < MAX_PLAYERS)
+	{
+		if (vm->champs[i] == NULL)
+		{
+			vm->champs[i] = player;
+			return ;
+		}
+		i++;
+	}
+	exit((ft_printf("\e[31;1mError\e[0m: too much champs (max \e[1m%d\e[0m)\n",
+					MAX_PLAYERS) & 1) | 1);
+}
+
+void	add_champ(struct s_vm *vm, char **argv, int i)
+{
+	int		a;
+
+	if (!argv[i + 1])
+		exit((ft_printf("\e[31;1mError\e[0m: missing number\n") & 1) | 1);
+	if ((a = ft_atoi(argv[i + 1])) >= MAX_PLAYERS || a < 0)
+		exit((ft_printf("\e[31;1mError\e[0m: -n number with "
+			"\e[36;1m(0 <= number < %d)\e[0m\n", MAX_PLAYERS) & 1) | 1);
+	if (!(argv[i + 2]))
+		exit((ft_printf("\e[31;1mError\e[0m: missing champ name\n") & 1) | 1);
+	if (vm->champs[a])
+		exit((ft_printf("\e[31;1mError\e[0m: number %d already used by %s\n",
+						a, vm->champs[a]) & 1) | 1);
+	vm->champs[a] = argv[i + 2];
+}
+
+int		get_champ_num(struct s_vm *vm)
+{
+	int i;
+
+	i = 0;
+	while (i < MAX_PLAYERS - 1)
+	{
+		if (!vm->champs[i])
+		{
+			if (vm->champs[i + 1])
+			{
+				ft_printf("\e[31;1mError\e[0m: missing champ n.%d\n", i);
+				exit(1);
+			}
+			break ;
+		}
+		i++;
+	}
+	if (!i)
+		exit((ft_printf("\e[31;1mError\e[0m: no champs specified\n") & 1) | 1);
+	return (i);
 }
 
 void	read_champ(struct s_vm *vm, int p, int fd)
@@ -43,7 +90,7 @@ void	read_champ(struct s_vm *vm, int p, int fd)
 	reverse(&(vm->headers[p].prog_size));
 	if (vm->headers[p].prog_size > CHAMP_MAX_SIZE)
 		exit((ft_printf("\e[31;1mError\e[0m: champ too heavy (%u bytes)\n",
-			vm->headers[p].prog_size) & 1) | 1);
+						vm->headers[p].prog_size) & 1) | 1);
 	if (!vm->headers[p].prog_size)
 		ft_printf("\e[33;1mWarning\e[0m: empty champ (0 bytes)\n");
 	read(fd, vm->headers[p].comment, COMMENT_LEN);

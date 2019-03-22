@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:40:35 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/20 16:48:10 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/22 16:42:18 by shthevak    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -57,4 +57,21 @@ void	kill_process(struct s_proc **proc, struct s_proc **vm, struct s_proc *last)
 	last->next = tmp;
 	free(*proc);
 	*proc = tmp;
+}
+
+void	create_processes(struct s_vm *vm)
+{
+	int				p;
+	struct s_proc	*proc;
+
+	p = vm->players - 1;
+	vm->processes = fresh_process(vm, p, vm->aspace * p);
+	proc = vm->processes;
+	while (p > 0)
+	{
+		p--;
+		proc->next = fresh_process(vm, p, vm->aspace * p);
+		proc = proc->next;
+	}
+	fprintf(stdout, "\n");
 }
