@@ -6,76 +6,13 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 15:54:02 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 16:44:06 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/26 13:06:20 by shthevak    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "op.h"
-/*
-int		get_champ_num(struct s_vm *vm)
-{
-	int		i;
 
-	i = 0;
-	while (i < MAX_PLAYERS - 1)
-	{
-		if (!vm->champs[i] && vm->champs[i + 1])
-		{
-			ft_printf("\e[31;1mError\e[0m: missing champ n.%d\n", i);
-			exit(1);
-		}
-		i++;
-	}
-	i = 0;
-	while (i < MAX_PLAYERS)
-	{
-		if (!vm->champs[i])
-			break ;
-		i++;
-	}
-	if (!i)
-		exit((ft_printf("\e[31;1mError\e[0m: no champs specified\n") & 1) | 1);
-//	ft_printf("%d champs specified\n", i);
-	return (i);
-}
-
-void	create_processes(struct s_vm *vm)
-{
-	int				p;
-	struct s_proc	*proc;
-
-	p = vm->players - 1;
-	vm->processes = fresh_process(vm, p, vm->aspace * p);
-	proc = vm->processes;
-//	fprintf(stdout, "%s's process created\n", vm->champs[p]);
-	while (p > 0)
-	{
-		p--;
-		proc->next = fresh_process(vm, p, vm->aspace * p);
-//		fprintf(stdout, "%s's process created\n", vm->champs[p]);
-		proc = proc->next;
-	}
-	fprintf(stdout, "\n");
-}
-
-void	init_params(struct s_vm *vm)
-{
-//	fprintf(stdout, "Initializing parameters...\n");
-	vm->cycles = 0;
-	vm->kcycles = CYCLE_TO_DIE;
-	vm->tcycles = 0;
-	vm->lives = 0;
-	vm->checks = 0;
-	vm->mchecks = 10;
-	if (vm->flags & F_GRAPH)
-	{
-		vm->data->frate = 15;
-		vm->data->gcycles = 10;
-	}
-}
-
-*/
 int		psize(struct s_proc *p)
 {
 	int		i;
@@ -170,27 +107,3 @@ void	go_corewar(struct s_vm *vm)
 		update_info(vm);
 	}
 }
-/*
-void	launch_corewar(struct s_vm *vm)
-{
-	int		i;
-
-	load_champs(vm);
-	create_processes(vm);
-	init_params(vm);
-	if (vm->flags & F_GRAPH)
-	{
-		vm->flags &= ~F_DUMP;
-		cw_update_window(vm);
-		sleep(4);
-	}
-	go_corewar(vm);
-	i = 0;
-	printf("\n\n");
-	while (i < vm->players)
-	{
-		printf("\e[1m%s\e[0m: last live \e[33;1m%d\e[0m\n",
-			vm->headers[i].prog_name, vm->llives[i]);
-		i++;
-	}
-}*/

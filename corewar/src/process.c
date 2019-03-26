@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:40:35 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 16:42:18 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/26 13:04:29 by shthevak    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -26,7 +26,7 @@ struct s_proc	*fresh_process(struct s_vm *vm, int pn, int pc)
 	return (p);
 }
 
-void	fork_process(struct s_vm *vm, struct s_proc *proc, int param)
+void			fork_process(struct s_vm *vm, struct s_proc *proc, int param)
 {
 	struct s_proc	*pnew;
 
@@ -42,7 +42,8 @@ void	fork_process(struct s_vm *vm, struct s_proc *proc, int param)
 	vm->processes = pnew;
 }
 
-void	kill_process(struct s_proc **proc, struct s_proc **vm, struct s_proc *last)
+void			kill_process(struct s_proc **proc, struct s_proc **vm,\
+				struct s_proc *last)
 {
 	struct s_proc	*tmp;
 
@@ -59,7 +60,7 @@ void	kill_process(struct s_proc **proc, struct s_proc **vm, struct s_proc *last)
 	*proc = tmp;
 }
 
-void	create_processes(struct s_vm *vm)
+void			create_processes(struct s_vm *vm)
 {
 	int				p;
 	struct s_proc	*proc;

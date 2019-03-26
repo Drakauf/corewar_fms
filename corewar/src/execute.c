@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 13:33:50 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 13:51:19 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/24 15:06:37 by shthevak    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,7 +17,7 @@
 #undef printf
 #define printf(f, ...)
 #define fprintf(x, f, ...)
-
+/*
 unsigned char	fparam(unsigned char op)
 {
 	return ((op & 192U) >> 6);
@@ -37,7 +37,7 @@ unsigned char	uparam(unsigned char op)
 {
 	return (op & 3U);
 }
-
+*/
 int		invalid_reg(int regnum)
 {
 	return (regnum < 1 || regnum > REG_NUMBER);
