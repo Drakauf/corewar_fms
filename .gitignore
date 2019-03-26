@@ -2,3 +2,4 @@ corewar/corewar
 *.o
 *.dSYM
 *libft.a
+asm/asm
