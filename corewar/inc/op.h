@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 11:17:29 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/27 11:57:43 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/27 13:59:04 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -162,7 +162,6 @@ struct s_proc	*fresh_process(struct s_vm *vm, int pn, int pc);
 
 void	cw_init_window(struct s_vdata *data);
 void	cw_update_window(struct s_vm *vm);
-int		**load_font(void);
 struct s_vm **get_vmp(void);
 */
 
@@ -219,6 +218,8 @@ int					get_param2(struct s_proc *p, struct s_vm *vm, unsigned char op, int pc);
 int					get_param3(struct s_proc *p, struct s_vm *vm, unsigned char op, int pc);
 void				get_params(struct s_proc *p, struct s_vm *vm, unsigned char op);
 
+
+int		**load_font(void);
 
 /*
 ** parsing.c

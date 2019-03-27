@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:13:43 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/27 11:36:17 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/27 14:02:31 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -98,8 +98,8 @@ void	read_champ(struct s_vm *vm, int p, int fd)
 	if (!vm->headers[p].prog_size)
 		ft_printf("\e[33;1mWarning\e[0m: empty champ (0 bytes)\n");
 	read(fd, vm->headers[p].comment, COMMENT_LEN);
-	ft_printf("magic %u, com ", vm->headers[p].magic, vm->headers[p].comment);
-	ft_printf("%s, prog_size %u\n", vm->headers[p].prog_size);
+	ft_printf("magic %u, com %s,", vm->headers[p].magic, vm->headers[p].comment);
+	ft_printf("prog_size %u\n", vm->headers[p].prog_size);
 	read(fd, &i, 4);
 	i = 0;
 	while (read(fd, vm->arena + vm->aspace * p + i, 1) == 1
