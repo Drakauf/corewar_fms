@@ -6,47 +6,21 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/16 00:41:35 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/26 14:32:19 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/26 19:13:04 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "../inc/asm.h"
 
-static void	set_data(t_data *d)
-{
-	d->header_stat = 0;
-	d->current = NULL;
-	d->previous = NULL;
-	d->comment = NULL;
-	d->name = NULL;
-	d->syntax_error = 0;
-	d->label = new_vector(VECTOR_PTR, 8);
-	d->p.line = 1;
-	d->p.col = 1;
-	if (d->syntax == ATNT)
-	{
-		d->inst_set = g_altr_inst_set;
-		d->n_inst = TOTAL_INST_NUMBER;
-	}
-	else if (d->syntax == INTL)
-	{
-		d->inst_set = g_altr_inst_set;
-		d->n_inst = TOTAL_INST_NUMBER;
-	}
-	else
-	{
-		d->inst_set = g_dflt_inst_set;
-		d->n_inst = TOTAL_INST_NUMBER;
-	}
-}
 
-static void		free_all(t_data *d, t_synt_tree *tree)
-{
-	d->label->free(d->label);
-	free_tree(tree);
-	free(d->file);
-}
+/*
+** print_total_errors()
+**
+** affiche le nombre d'erreurs s'il y en a,
+** ou la presence de la section .name et .comment et
+** d'au moins une instruction (sans compter les labels)
+*/
 
 static int		print_total_errors(t_data *d, t_synt_tree *tree)
 {
@@ -76,6 +50,14 @@ static int		print_total_errors(t_data *d, t_synt_tree *tree)
 	return (1);
 }
 
+/*
+** general_parser() s'occupe de verifier la syntaxe et de recuperer
+** les instructions sous forme de liste chainee.
+**
+** write_binary() enregistre les instructions contenues
+** dans la liste chainee en binaire.
+*/
+
 int			main(int ac, char *av[])
 {
 	t_data		data;
@@ -85,7 +67,7 @@ int			main(int ac, char *av[])
 	if (ac == 1)
 		return (print_help(av[0]));
 	ft_assert(ac > 5, TOO_MANY_ARGS);
-	get_argument(av + 1, &data);
+	get_arguments(av + 1, &data);
 	ft_assert(!(data.file = get_contents(data.input, &data.file_len)), OPEN_ERROR);
 	if (data.syntax == CSTYLE)
 	{
@@ -93,7 +75,6 @@ int			main(int ac, char *av[])
 	}
 	else if (data.output == NULL)
 		return (disassemble(data.file, data.file_len));
-	set_data(&data);
 	general_parser(&data, &tree);
 	if (print_total_errors(&data, tree))
 		return (-1);

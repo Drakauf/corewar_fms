@@ -6,7 +6,7 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/25 10:33:29 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/25 10:45:00 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/26 19:12:34 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -50,7 +50,7 @@ static int		set_option_2(char *arg[], t_data *d)
 	return (0);
 }
 
-extern void		get_argument(char *arg[], t_data *d)
+extern void		get_arguments(char *arg[], t_data *d)
 {
 	d->output = NULL;
 	arg = set_option_1(arg, d);

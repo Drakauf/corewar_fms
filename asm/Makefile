@@ -6,7 +6,7 @@
 #    By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2019/02/25 16:43:57 by mhouppin     #+#   ##    ##    #+#        #
-#    Updated: 2019/03/20 11:02:55 by fcordon     ###    #+. /#+    ###.fr      #
+#    Updated: 2019/03/26 18:00:14 by fcordon     ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -15,8 +15,8 @@ SHELL     = bash
 NAME      = asm
 OBJ_DIR   = obj
 SRC_DIR   = src
-INC_DIR   = inc:../libft
-LIB       = ../libft
+INC_DIR   = inc:libft
+LIB       = libft
 ARCHIVE  := $(LIB)/libft.a
 SOURCES  := $(wildcard ${SRC_DIR}/*.c)
 OBJECTS  := $(patsubst ${SRC_DIR}/%.c,${OBJ_DIR}/%.o,${SOURCES})

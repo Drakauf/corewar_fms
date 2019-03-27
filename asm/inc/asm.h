@@ -6,7 +6,7 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/14 06:47:27 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/25 19:15:47 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/27 10:19:21 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -14,7 +14,7 @@
 #ifndef ASM_H
 # define ASM_H
 
-# include "../../libft/libft.h"
+# include "../libft/libft.h"
 # include <stdint.h>
 
 enum	e_inst
@@ -23,25 +23,19 @@ enum	e_inst
 	ZJMP_M, LDI_M, STI_M, FORK_M, LLD_M, LLDI_M, LFORK_M, AFF_M, SECTION_M
 };
 
+# define ERROR					-1
+
 # define DFLT					0
 # define ATNT					1
 # define INTL					2
 # define CSTYLE					3
-/*
-# define IND_SIZE				2
-# define REG_SIZE				4
-# define DIR_SIZE				REG_SIZE
-
-# define REG_CODE				1
-# define DIR_CODE				2
-# define IND_CODE				3
-*/
 
 # define MAX_ARGS_NUMBER		4
 # define MAX_PLAYERS			4
 # define MEM_SIZE				(4*1024)
 # define IDX_MOD				(MEM_SIZE / 8)
 # define CHAMP_MAX_SIZE			(MEM_SIZE / 6)
+
 enum	e_hexatype
 {
 	HEXA_MIN, HEXA_MAJ, HEXA_BOTH
@@ -103,21 +97,13 @@ enum	e_hexatype
 # define REG_D					1
 # define IND_D					3
 # define DIR_D					2
-/*
-# define M_1					1
-# define M_4					4
-# define M_2					2
-*/
+
 # define PROG_NAME_LENGTH		128
 # define PROG_COMMENT_LENGTH	2048
 # define COREWAR_EXEC_MAGIC		0xea83f3
 
-//# define DFLT_INST_NUMBER		17
-//# define ALTR_INST_NUMBER		17
 # define TOTAL_INST_NUMBER		17
 # define N_INST					TOTAL_INST_NUMBER
-//# define ALTR_INST_NUMBER		13
-
 
 /*
 ** ERRORS
@@ -127,27 +113,9 @@ enum	e_err
 {
 	COMMENT_MISSING,
 	NAME_MISSING,
-	/*
-	SYNTAX_NAME,
-	SYNTAX_COMMENT,
-	ILLEGAL_CHAR,
-	*/
 	OPEN_ERROR,
 	TOO_FEW_ARGS,
 	TOO_MANY_ARGS,
-	/*
-	NAME_LENGTH,
-	COMMENT_LENGTH,
-	DUPLICATE_NAME,
-	DUPLICATE_COMMENT,
-	UNKNOWN_INST,
-	SYNTAX_ERROR,
-	IMAGINARY_SECTION,
-	COMMENT_OPERAND,
-	NAME_OPERAND,
-	LABEL_SYNTAX,
-	TOO_MANY_OPERAND,
-	*/
 	EXT_ERROR,
 	CREAT_ERROR,
 	NO_INSTRUCTION,
@@ -157,10 +125,6 @@ enum	e_err
 
 typedef struct s_header	t_header;
 typedef struct s_param	t_param;
-
-/*
-** binary order = magic, prog_name, prog_size, prog_comment
-*/
 
 struct		s_param
 {
@@ -209,8 +173,8 @@ typedef struct		s_data
 	int					header_stat;
 	int					file_len;
 	t_pos				p;
-	int					type;	// inst type (label, inst, .name, .comment, ...)
-	int					remaind;// number of remaind operand
+	int					type;
+	int					remaind;
 	t_vector			*label;
 	char				*file;
 	char				*comment;
@@ -251,7 +215,7 @@ typedef struct		s_synt_tree
 ** get_arguments.c
 */
 
-extern void		get_argument(char *arg[], t_data *d);
+extern void		get_arguments(char *arg[], t_data *d);
 
 /*
 ** file_extension.c 
@@ -372,6 +336,37 @@ extern int		get_opcode(char *s, t_data *d);
 */
 
 /*
+** free.c
+*/
+
+extern void		free_all(t_data *d, t_synt_tree *tree);
+extern void		free_tree(t_synt_tree *t);
+
+/*
+**
+*/
+
+/*
+**
+*/
+
+/*
+**
+*/
+
+/*
+**
+*/
+
+/*
+**
+*/
+
+/*
+**
+*/
+
+/*
 **
 */
 
@@ -424,13 +419,6 @@ int		dflt_is_register(char *s, t_data *d, t_child *c, t_pos p);
 */
 
 extern t_label		*new_label(char *s);
-
-/*
-** free.c
-*/
-
-extern void	free_data(t_data *d);
-extern void	free_tree(t_synt_tree *t);
 
 /*
 ** atnt_check_mov_syntax.c

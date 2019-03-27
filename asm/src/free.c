@@ -6,19 +6,21 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 08:30:27 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/18 12:25:57 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/26 17:49:43 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "asm.h"
 
-extern void	free_data(t_data *d)
+extern void		free_all(t_data *d, t_synt_tree *tree)
 {
 	d->label->free(d->label);
+	free_tree(tree);
+	free(d->file);
 }
 
-extern void	free_tree(t_synt_tree *t)
+extern void		free_tree(t_synt_tree *t)
 {
 	t_synt_tree		*tofree;
 	t_child			*c;

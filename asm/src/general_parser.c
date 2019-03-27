@@ -6,12 +6,40 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/25 11:01:06 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/25 18:53:02 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/26 17:54:49 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "asm.h"
+
+static void	set_data(t_data *d)
+{
+	d->header_stat = 0;
+	d->current = NULL;
+	d->previous = NULL;
+	d->comment = NULL;
+	d->name = NULL;
+	d->syntax_error = 0;
+	d->label = new_vector(VECTOR_PTR, 8);
+	d->p.line = 1;
+	d->p.col = 1;
+	if (d->syntax == ATNT)
+	{
+		d->inst_set = g_altr_inst_set;
+		d->n_inst = TOTAL_INST_NUMBER;
+	}
+	else if (d->syntax == INTL)
+	{
+		d->inst_set = g_altr_inst_set;
+		d->n_inst = TOTAL_INST_NUMBER;
+	}
+	else
+	{
+		d->inst_set = g_dflt_inst_set;
+		d->n_inst = TOTAL_INST_NUMBER;
+	}
+}
 
 static char		*get_label(char *s, t_data *d)
 {
@@ -76,8 +104,19 @@ static void		parse_code(t_data *d, t_synt_tree **tree)
 	}
 }
 
+/*
+** get_labels() recupere d'abord tous les labels dans le tableau d->label
+** (aucun message d'erreur a cette etape)
+**
+** parse_code() verifie la syntaxe, recupere les instructions dans
+** la liste de type t_synt_tree et calcul l'adresse des labels
+** tout en affichant des messages d'erreur si besoin.
+** le nombre d'erreurs est contenu dans d->syntax_error
+*/
+
 extern void	general_parser(t_data *d, t_synt_tree **tree)
 {
+	set_data(d);
 	get_labels(d);
 	d->p.line = 1;
 	d->p.col = 1;

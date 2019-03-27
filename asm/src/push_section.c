@@ -6,7 +6,7 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/25 19:06:11 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/25 19:06:35 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/26 19:17:09 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -25,8 +25,6 @@ extern char		*push_section_name_with_argument(char *s, char *section, t_data *d,
 		ft_perror(NAME_CMD_STRING, "duplicate section", &d->p, d);
 		return (skip_all_but('\n', s));
 	}
-//	if (d->previous && d->previous->remainder)
-//		ft_perror(d->previous->s, "too few operand", &d->p, d);
 	d->header_stat |= 0x1;
 	d->current = push_new_instruction(tree, new_node(section, d, SECTION_M));
 	d->p.col += ft_strlen(section);
