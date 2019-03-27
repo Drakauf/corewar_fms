@@ -6,7 +6,7 @@
 /*   By: shthevak <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/22 15:59:24 by shthevak     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/24 16:31:58 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/27 11:57:41 by shthevak    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -41,7 +41,6 @@ void	launch_corewar(struct s_vm *vm)
 		cw_update_window(vm);
 		sleep(4);
 	}
-/**************************/
 	go_corewar(vm);
 	i = 0;
 	printf("\n\n");
