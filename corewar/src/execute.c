@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 13:33:50 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/24 15:06:37 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/27 11:40:56 by shthevak    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -17,27 +17,7 @@
 #undef printf
 #define printf(f, ...)
 #define fprintf(x, f, ...)
-/*
-unsigned char	fparam(unsigned char op)
-{
-	return ((op & 192U) >> 6);
-}
 
-unsigned char	sparam(unsigned char op)
-{
-	return ((op & 48U) >> 4);
-}
-
-unsigned char	tparam(unsigned char op)
-{
-	return ((op & 12U) >> 2);
-}
-
-unsigned char	uparam(unsigned char op)
-{
-	return (op & 3U);
-}
-*/
 int		invalid_reg(int regnum)
 {
 	return (regnum < 1 || regnum > REG_NUMBER);
@@ -47,26 +27,6 @@ int		i_inst(int c)
 {
 	return (c == 10 || c == 11 || c == 14);
 }	
-
-int		param_size(unsigned char op, struct s_proc *p)
-{
-	int	size;
-
-	size = 2;
-	if (fparam(op) <= 1)
-		size += fparam(op);
-	else
-		size += (fparam(op) == 2 && p->last_it != 10 && p->last_it != 14) ? 4 : 2;
-	if (sparam(op) <= 1)
-		size += sparam(op);
-	else
-		size += (sparam(op) == 2 && p->last_it != 10 && p->last_it != 11 && p->last_it != 14) ? 4 : 2;
-	if (tparam(op) <= 1)
-		size += tparam(op);
-	else
-		size += (tparam(op) == 2 && p->last_it != 11) ? 4 : 2;
-	return (size);
-}
 
 int		get_int(void *arena, int pc, int offset)
 {
@@ -121,67 +81,6 @@ int		wrong_op(struct s_proc *p)
 	p->carry = 0;
 	p->pcount = (p->pcount + 1) % MEM_SIZE;
 	return (0);
-}
-
-int		get_param1(struct s_proc *p, struct s_vm *vm, unsigned char op, int pc)
-{
-	p->last_p1 = *((char *)vm->arena + pc);
-	if (fparam(op) == 1)
-		return (1);
-	p->last_p1 <<= 8;
-	p->last_p1 |= *((unsigned char *)vm->arena + ((pc + 1) % MEM_SIZE));
-	if (fparam(op) == 3 || p->last_it == 10 || p->last_it == 14)
-		return (2);
-	p->last_p1 <<= 8;
-	p->last_p1 |= *((unsigned char *)vm->arena + ((pc + 2) % MEM_SIZE));
-	p->last_p1 <<= 8;
-	p->last_p1 |= *((unsigned char *)vm->arena + ((pc + 3) % MEM_SIZE));
-	return (4);
-}
-
-int		get_param2(struct s_proc *p, struct s_vm *vm, unsigned char op, int pc)
-{
-	p->last_p2 = *((char *)vm->arena + pc);
-	if (sparam(op) == 1)
-		return (1);
-	p->last_p2 <<= 8;
-	p->last_p2 |= *((unsigned char *)vm->arena + ((pc + 1) % MEM_SIZE));
-	if (sparam(op) == 3 || p->last_it == 10 || p->last_it == 11 ||
-		p->last_it == 14)
-		return (2);
-	p->last_p2 <<= 8;
-	p->last_p2 |= *((unsigned char *)vm->arena + ((pc + 2) % MEM_SIZE));
-	p->last_p2 <<= 8;
-	p->last_p2 |= *((unsigned char *)vm->arena + ((pc + 3) % MEM_SIZE));
-	return (4);
-}
-
-int		get_param3(struct s_proc *p, struct s_vm *vm, unsigned char op, int pc)
-{
-	p->last_p3 = *((char *)vm->arena + pc);
-	if (tparam(op) == 1)
-		return (1);
-	p->last_p3 <<= 8;
-	p->last_p3 |= *((unsigned char *)vm->arena + ((pc + 1) % MEM_SIZE));
-	if (tparam(op) == 3 || p->last_it == 11)
-		return (2);
-	p->last_p3 <<= 8;
-	p->last_p3 |= *((unsigned char *)vm->arena + ((pc + 2) % MEM_SIZE));
-	p->last_p3 <<= 8;
-	p->last_p3 |= *((unsigned char *)vm->arena + ((pc + 3) % MEM_SIZE));
-	return (4);
-}
-
-void	get_params(struct s_proc *p, struct s_vm *vm, unsigned char op)
-{
-	int		pc;
-
-	pc = (p->pcount + 2) % MEM_SIZE;
-	pc += get_param1(p, vm, op, pc);
-	pc %= MEM_SIZE;
-	pc += get_param2(p, vm, op, pc);
-	pc %= MEM_SIZE;
-	get_param3(p, vm, op, pc);
 }
 
 int		exec_sumcalc(struct s_proc *p, struct s_vm *vm, unsigned char op)

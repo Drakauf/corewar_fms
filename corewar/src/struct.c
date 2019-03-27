@@ -6,7 +6,7 @@
 /*   By: shthevak <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/22 14:41:31 by shthevak     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 16:46:56 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/27 13:59:52 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,7 +24,6 @@ void		destroy_vdata(struct s_vdata *data)
 {
 	int		i;
 
-	SDL_WaitEvent(&(data->ev));
 	SDL_DestroyTexture(data->tx);
 	SDL_DestroyRenderer(data->rd);
 	SDL_DestroyWindow(data->win);

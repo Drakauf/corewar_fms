@@ -6,14 +6,14 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:40:35 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/26 13:04:29 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/27 11:54:08 by shthevak    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "op.h"
 
-struct s_proc	*fresh_process(struct s_vm *vm, int pn, int pc)
+struct s_proc	*fresh_process(int pn, int pc)
 {
 	struct s_proc	*p;
 
@@ -66,12 +66,12 @@ void			create_processes(struct s_vm *vm)
 	struct s_proc	*proc;
 
 	p = vm->players - 1;
-	vm->processes = fresh_process(vm, p, vm->aspace * p);
+	vm->processes = fresh_process(p, vm->aspace * p);
 	proc = vm->processes;
 	while (p > 0)
 	{
 		p--;
-		proc->next = fresh_process(vm, p, vm->aspace * p);
+		proc->next = fresh_process(p, vm->aspace * p);
 		proc = proc->next;
 	}
 	fprintf(stdout, "\n");

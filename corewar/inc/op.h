@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 11:17:29 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 16:46:53 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/27 13:59:04 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -162,9 +162,64 @@ struct s_proc	*fresh_process(struct s_vm *vm, int pn, int pc);
 
 void	cw_init_window(struct s_vdata *data);
 void	cw_update_window(struct s_vm *vm);
-int		**load_font(void);
 struct s_vm **get_vmp(void);
 */
+
+
+/*
+** champ_intro.c
+*/
+
+void	champ_intro(struct s_vm *vm, int p, int fd);
+
+/*
+** corewar.c
+*/
+
+int					p_size(struct s_proc *p);
+void				check_lives(struct s_vm *vm);
+void				dump_memory(struct s_vm *vm);
+void				update_info(struct s_vm *vm);
+void				go_corewar(struct s_vm *vm);
+
+/*
+** launch_corewar.c 
+*/
+
+void				launch_corewar(struct s_vm *vm);
+void				init_params(struct s_vm *vm);
+
+/*
+** load_champs.c
+*/
+
+void				load_champs(struct s_vm *vm);
+void				read_champs(struct s_vm *vm, int p, int fd);
+int					get_champ_num(struct s_vm *vm);
+void				next_player(struct s_vm *vm, char *player);
+void				add_champ(struct s_vm *vm, char **argv, int i);
+
+/*
+** param_get.c
+*/
+
+unsigned char 		fparam(unsigned char op);
+unsigned char 		sparam(unsigned char op);
+unsigned char 		tparam(unsigned char op);
+unsigned char 		uparam(unsigned char op);
+
+/*
+** param_tool.c
+*/
+
+int					param_size(unsigned char op, struct s_proc *p);
+int					get_param1(struct s_proc *p, struct s_vm *vm, unsigned char op, int pc);
+int					get_param2(struct s_proc *p, struct s_vm *vm, unsigned char op, int pc);
+int					get_param3(struct s_proc *p, struct s_vm *vm, unsigned char op, int pc);
+void				get_params(struct s_proc *p, struct s_vm *vm, unsigned char op);
+
+
+int		**load_font(void);
 
 /*
 ** parsing.c
@@ -182,36 +237,19 @@ void				destroy_vm(void) __attribute__((destructor));
 void				destroy_vdata(struct s_vdata *data);
 
 /*
-** load_champs.c
-*/
-
-void				load_champs(struct s_vm *vm);
-void				read_champs(struct s_vm *vm, int p, int fd);
-int					get_champ_num(struct s_vm *vm);
-void				next_player(struct s_vm *vm, char *player);
-void				add_champs(struct s_vm *vm, char **argv, int i);
-
-/*
 ** tools.c
 */
 
 void				reverse(unsigned int *a);
 
 /*
-** launch_corewar.c 
-*/
-
-void				launch_corewar(struct s_vm *vm);
-void				init_params(struct s_vm *vm);
-
-/*
 ** process.c
 */
 
-void				create_process(struct s_vm *vm);
+void				create_processes(struct s_vm *vm);
 void				kill_process(struct s_proc **proc, struct s_proc **vm,\
 					struct s_proc *last);
 void				fork_process(struct s_vm *vm, struct s_proc *proc, int param);
-struct s_proc		*fresh_process(struct s_vm *vm, int pn, int pc);
+struct s_proc		*fresh_process(int pn, int pc);
 
 #endif
