@@ -1,5 +1,6 @@
 corewar/corewar
 *.o
+*.cor
 *.dSYM
 *libft.a
 asm/asm

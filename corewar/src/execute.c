@@ -6,17 +6,12 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 13:33:50 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/27 11:40:56 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 10:18:38 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "op.h"
-
-#undef fprintf
-#undef printf
-#define printf(f, ...)
-#define fprintf(x, f, ...)
 
 int		invalid_reg(int regnum)
 {
@@ -147,7 +142,6 @@ int		do_load(unsigned char c, struct s_proc *p, struct s_vm *vm)
 
 int		live(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	if (p->last_p1 > vm->players || p->last_p1 <= 0)
 	{
 		p->pcount = (p->pcount + 5) % MEM_SIZE;
@@ -157,13 +151,11 @@ int		live(struct s_vm *vm, struct s_proc *p)
 	vm->lives += 1;
 	p->lives += 1;
 	p->pcount = (p->pcount + 5) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->carry);
 }
 
 int		ld(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	if (!(fparam(p->last_op) & 2) || sparam(p->last_op) != 1 ||
 		tparam(p->last_op) != 0 || invalid_reg(p->last_p2))
 	{
@@ -175,13 +167,11 @@ int		ld(struct s_vm *vm, struct s_proc *p)
 	else
 		p->regs[p->last_p2 - 1] = get_int(vm->arena, p->pcount, p->last_p1 % IDX_MOD);
 	p->pcount = (p->pcount + param_size(p->last_op & 240U, p)) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->regs[p->last_p2 - 1] == 0);
 }
 
 int		st(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	if (fparam(p->last_op) != 1 || !(sparam(p->last_op) & 1) ||
 		tparam(p->last_op) != 0 || invalid_reg(p->last_p1) ||
 		(sparam(p->last_op) == 1 && invalid_reg(p->last_p2)))
@@ -196,13 +186,11 @@ int		st(struct s_vm *vm, struct s_proc *p)
 		set_int(vm, p->pcount + (p->last_p2 % IDX_MOD), p->number,
 			p->regs[p->last_p1 - 1]);
 	p->pcount = (p->pcount + param_size(p->last_op & 240U, p)) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->carry);
 }
 
 int		add(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	if (fparam(p->last_op) != 1 || sparam(p->last_op) != 1 ||
 		tparam(p->last_op) != 1 || invalid_reg(p->last_p1) ||
 		invalid_reg(p->last_p2) || invalid_reg(p->last_p3))
@@ -212,13 +200,11 @@ int		add(struct s_vm *vm, struct s_proc *p)
 	}
 	p->regs[p->last_p3 - 1] = p->regs[p->last_p2 - 1] + p->regs[p->last_p1 - 1];
 	p->pcount = (p->pcount + 5) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->regs[p->last_p3 - 1] == 0);
 }
 
 int		sub(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	if (fparam(p->last_op) != 1 || sparam(p->last_op) != 1 ||
 		tparam(p->last_op) != 1 || invalid_reg(p->last_p1) ||
 		invalid_reg(p->last_p2) || invalid_reg(p->last_p3))
@@ -228,13 +214,11 @@ int		sub(struct s_vm *vm, struct s_proc *p)
 	}
 	p->regs[p->last_p3 - 1] = p->regs[p->last_p2 - 1] - p->regs[p->last_p1 - 1];
 	p->pcount = (p->pcount + 5) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->regs[p->last_p3 - 1] == 0);
 }
 
 int		and(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	t_reg	result;
 
 	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
@@ -260,13 +244,11 @@ int		and(struct s_vm *vm, struct s_proc *p)
 		result &= get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
 	p->regs[p->last_p3 - 1] = result;
 	p->pcount = (p->pcount + param_size(p->last_op, p)) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->regs[p->last_p3 - 1] == 0);
 }
 
 int		or(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	t_reg	result;
 
 	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
@@ -292,13 +274,11 @@ int		or(struct s_vm *vm, struct s_proc *p)
 		result |= get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
 	p->regs[p->last_p3 - 1] = result;
 	p->pcount = (p->pcount + param_size(p->last_op, p)) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->regs[p->last_p3 - 1] == 0);
 }
 
 int		xor(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	t_reg	result;
 
 	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
@@ -324,13 +304,11 @@ int		xor(struct s_vm *vm, struct s_proc *p)
 		result ^= get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
 	p->regs[p->last_p3 - 1] = result;
 	p->pcount = (p->pcount + param_size(p->last_op, p)) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->regs[p->last_p3 - 1] == 0);
 }
 
 int		zjmp(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	p->last_p1 %= IDX_MOD;
 	if (p->carry)
 	{
@@ -340,13 +318,11 @@ int		zjmp(struct s_vm *vm, struct s_proc *p)
 	}
 	else
 		p->pcount = (p->pcount + 3) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->carry);
 }
 
 int		ldi(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	int	index;
 
 	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
@@ -370,13 +346,11 @@ int		ldi(struct s_vm *vm, struct s_proc *p)
 		index += p->last_p2;
 	p->regs[p->last_p3 - 1] = get_int(vm->arena, p->pcount, index % IDX_MOD);
 	p->pcount = (p->pcount + param_size(p->last_op, p)) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->regs[p->last_p3 - 1] == 0);
 }
 
 int		sti(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	int	index;
 
 	if (fparam(p->last_op) != 1 || sparam(p->last_op) == 0 ||
@@ -400,23 +374,19 @@ int		sti(struct s_vm *vm, struct s_proc *p)
 		index += p->last_p3;
 	set_int(vm, p->pcount + (index % IDX_MOD), p->number, p->regs[p->last_p1 - 1]);
 	p->pcount = (p->pcount + param_size(p->last_op, p)) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->carry);
 }
 
 int		cfork(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	p->last_p1 %= IDX_MOD;
 	fork_process(vm, p, p->last_p1);
 	p->pcount = (p->pcount + 3) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->carry);
 }
 
 int		lld(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	if (!(fparam(p->last_op) & 2) || sparam(p->last_op) != 1 ||
 		tparam(p->last_op) != 0 || invalid_reg(p->last_p2))
 	{
@@ -428,13 +398,11 @@ int		lld(struct s_vm *vm, struct s_proc *p)
 	else
 		p->regs[p->last_p2 - 1] = get_int(vm->arena, p->pcount, p->last_p1);
 	p->pcount = (p->pcount + param_size(p->last_op & 240U, p)) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->regs[p->last_p2 - 1] == 0);
 }
 
 int		lldi(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	int	index;
 
 	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
@@ -458,22 +426,18 @@ int		lldi(struct s_vm *vm, struct s_proc *p)
 		index += p->last_p2;
 	p->regs[p->last_p3 - 1] = get_int(vm->arena, p->pcount, index);
 	p->pcount = (p->pcount + param_size(p->last_op, p)) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->regs[p->last_p3 - 1] == 0);
 }
 
 int		lfork(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	fork_process(vm, p, p->last_p1);
 	p->pcount = (p->pcount + 3) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (p->carry);
 }
 
 int		aff(struct s_vm *vm, struct s_proc *p)
 {
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	char	c;
 
 	if (invalid_reg(p->last_p1))
@@ -485,7 +449,6 @@ int		aff(struct s_vm *vm, struct s_proc *p)
 	if (!(vm->flags & F_GRAPH))
 		write(1, &c, 1);
 	p->pcount = (p->pcount + 3) % MEM_SIZE;
-	printf("func %s, line %u: \e[36;1m%p\e[0m\n", __func__, __LINE__, p);
 	return (c == 0);
 }
 
@@ -510,8 +473,6 @@ int		execute(struct s_proc *p, struct s_vm *vm)
 
 	if (--(p->cooldown) == 1)
 	{
-#undef fprintf
-int fprintf(FILE *s, const char *fmt, ...);
 		fprintf(stderr, "process \e[1m%s\e[0m (pointer %p)\n", vm->champs[p->number - 1], p);
 		fprintf(stderr, "Executing \e[33;1m%s\e[0m[%x](\e[1m%d, %d, %d\e[0m) at cycle %d\n\n", inst_names[p->last_it],
 			p->pcount, p->last_p1, p->last_p2, p->last_p3, vm->tcycles);
@@ -522,7 +483,6 @@ int fprintf(FILE *s, const char *fmt, ...);
 		return (0);
 	p->cooldown = 0;
 	fprintf(stderr, "process \e[1m%s\e[0m (pc %d)\n", vm->champs[p->number - 1], p->pcount);
-#undef fprintf
 	c = *((unsigned char *)vm->arena + p->pcount);
 	if (c > 16 || c == 0)
 		return (wrong_op(p));

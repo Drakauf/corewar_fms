@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 11:17:29 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/27 13:59:04 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 10:17:09 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -58,6 +58,29 @@
 # define TB_MAX_CHARS	80
 # define BORDER_SIZE	6
 # define BORDER_COLOR	0x007F7F7F
+
+# define VLIVES			0x01
+# define VCYCLES		0x02
+# define VOPERS			0x04
+# define VDEATHS		0x08
+# define VPCMOV			0x10
+
+# define CLIVE			0x01
+# define CLD			0x02
+# define CST			0x03
+# define CADD			0x04
+# define CSUB			0x05
+# define CAND			0x06
+# define COR			0x07
+# define CXOR			0x08
+# define CZJMP			0x09
+# define CLDI			0x0a
+# define CSTI			0x0b
+# define CFORK			0x0c
+# define CLLD			0x0d
+# define CLLDI			0x0e
+# define CLFORK			0x0f
+# define CAFF			0x10
 
 /*
 ** Little endian: BGRA color
