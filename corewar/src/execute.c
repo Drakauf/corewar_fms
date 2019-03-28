@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 13:33:50 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 10:18:38 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 11:59:42 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -142,15 +142,18 @@ int		do_load(unsigned char c, struct s_proc *p, struct s_vm *vm)
 
 int		live(struct s_vm *vm, struct s_proc *p)
 {
-	if (p->last_p1 > vm->players || p->last_p1 <= 0)
+	if (p->last_p1 < -vm->players || p->last_p1 >= 0)
 	{
 		p->pcount = (p->pcount + 5) % MEM_SIZE;
 		return (0);
 	}
-	vm->llives[p->last_p1 - 1] = vm->tcycles;
+	vm->llives[-1 - p->last_p1] = vm->tcycles;
 	vm->lives += 1;
-	p->lives += 1;
+	p->lives = vm->tcycles;
 	p->pcount = (p->pcount + 5) % MEM_SIZE;
+	if (vm->verbose & VLIVES)
+		ft_printf("Player %d (%s) is said to be alive\n", -p->last_p1,
+			vm->headers[-1 - p->last_p1].prog_name);
 	return (p->carry);
 }
 
@@ -473,16 +476,12 @@ int		execute(struct s_proc *p, struct s_vm *vm)
 
 	if (--(p->cooldown) == 1)
 	{
-		fprintf(stderr, "process \e[1m%s\e[0m (pointer %p)\n", vm->champs[p->number - 1], p);
-		fprintf(stderr, "Executing \e[33;1m%s\e[0m[%x](\e[1m%d, %d, %d\e[0m) at cycle %d\n\n", inst_names[p->last_it],
-			p->pcount, p->last_p1, p->last_p2, p->last_p3, vm->tcycles);
 		execute_last(p, vm);
 		return (1);
 	}
 	if (p->cooldown > 1)
 		return (0);
 	p->cooldown = 0;
-	fprintf(stderr, "process \e[1m%s\e[0m (pc %d)\n", vm->champs[p->number - 1], p->pcount);
 	c = *((unsigned char *)vm->arena + p->pcount);
 	if (c > 16 || c == 0)
 		return (wrong_op(p));

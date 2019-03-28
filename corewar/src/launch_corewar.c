@@ -6,7 +6,7 @@
 /*   By: shthevak <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/22 15:59:24 by shthevak     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/27 11:57:41 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 11:26:30 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -31,6 +31,8 @@ void	init_params(struct s_vm *vm)
 void	launch_corewar(struct s_vm *vm)
 {
 	int		i;
+	int		max;
+	int		imax;
 
 	load_champs(vm);
 	create_processes(vm);
@@ -43,11 +45,14 @@ void	launch_corewar(struct s_vm *vm)
 	}
 	go_corewar(vm);
 	i = 0;
-	printf("\n\n");
+	max = -1;
+	imax = -1;
 	while (i < vm->players)
 	{
-		printf("\e[1m%s\e[0m: last live \e[33;1m%d\e[0m\n",
-				vm->headers[i].prog_name, vm->llives[i]);
+		imax = (vm->llives[i] > max) ? i : imax;
+		max = (vm->llives[i] > max) ? vm->llives[i] : max;
 		i++;
 	}
+	ft_printf("Contestant %d, \"%s\", has won !\n", imax + 1,
+		vm->headers[imax].prog_name);
 }

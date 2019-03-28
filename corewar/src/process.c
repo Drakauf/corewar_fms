@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:40:35 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/27 11:54:08 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 12:01:25 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -20,7 +20,7 @@ struct s_proc	*fresh_process(int pn, int pc)
 	if (!(p = (struct s_proc *)malloc(sizeof(struct s_proc))))
 		exit((ft_printf("\e[31;1mError\e[0m: %s\n", strerror(ENOMEM)) & 1) | 1);
 	ft_memset(p, '\0', sizeof(struct s_proc));
-	p->regs[0] = pn + 1;
+	p->regs[0] = -(pn + 1);
 	p->pcount = pc;
 	p->number = pn + 1;
 	return (p);
@@ -42,17 +42,20 @@ void			fork_process(struct s_vm *vm, struct s_proc *proc, int param)
 	vm->processes = pnew;
 }
 
-void			kill_process(struct s_proc **proc, struct s_proc **vm,\
+void			kill_process(struct s_proc **proc, struct s_vm *vm,\
 				struct s_proc *last)
 {
 	struct s_proc	*tmp;
 
+	ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
+		1 + psize(vm->processes) - psize(*proc), vm->tcycles - (*proc)->lives,
+		vm->kcycles);
 	tmp = (*proc)->next;
 	if (!last)
 	{
 		free(*proc);
 		*proc = tmp;
-		*vm = tmp;
+		vm->processes = tmp;
 		return ;
 	}
 	last->next = tmp;
@@ -74,5 +77,4 @@ void			create_processes(struct s_vm *vm)
 		proc->next = fresh_process(p, vm->aspace * p);
 		proc = proc->next;
 	}
-	fprintf(stdout, "\n");
 }

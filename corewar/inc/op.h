@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 11:17:29 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 10:17:09 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 12:01:44 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -45,7 +45,7 @@
 
 # define F_DUMP			0x1
 # define F_GRAPH		0x2
-# define F_VERB			0x3
+# define F_VERB			0x4
 
 # define MEM_LINES		64
 # define MEM_COLS		64
@@ -270,7 +270,7 @@ void				reverse(unsigned int *a);
 */
 
 void				create_processes(struct s_vm *vm);
-void				kill_process(struct s_proc **proc, struct s_proc **vm,\
+void				kill_process(struct s_proc **proc, struct s_vm *vm,\
 					struct s_proc *last);
 void				fork_process(struct s_vm *vm, struct s_proc *proc, int param);
 struct s_proc		*fresh_process(int pn, int pc);

@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:13:43 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/27 14:02:31 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 11:25:35 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -71,17 +71,6 @@ int		get_champ_num(struct s_vm *vm)
 	return (i);
 }
 
-/*
-**	read(fd, &(vm->headers[p].magic), 4);
-**	reverse(&(vm->headers[p].magic));
-**	if (vm->headers[p].magic != COREWAR_MAGIC)
-**		exit((ft_printf("\e[31;1mError\e[0m: invalid magic number\n") & 1) | 1);
-**	if (!(vm->headers[p].prog_name = (char *)malloc(PROG_NAME_LEN + 1)))
-**		exit((ft_printf("\e[31;1mError\e[0m: %s\n", strerror(ENOMEM)) & 1) | 1);
-**	if (!(vm->headers[p].comment = (char *)malloc(COMMENT_LEN + 1)))
-**		exit((ft_printf("\e[31;1mError\e[0m: %s\n", strerror(ENOMEM)) & 1) | 1);
-*/
-
 void	read_champ(struct s_vm *vm, int p, int fd)
 {
 	unsigned int		i;
@@ -98,8 +87,6 @@ void	read_champ(struct s_vm *vm, int p, int fd)
 	if (!vm->headers[p].prog_size)
 		ft_printf("\e[33;1mWarning\e[0m: empty champ (0 bytes)\n");
 	read(fd, vm->headers[p].comment, COMMENT_LEN);
-	ft_printf("magic %u, com %s,", vm->headers[p].magic, vm->headers[p].comment);
-	ft_printf("prog_size %u\n", vm->headers[p].prog_size);
 	read(fd, &i, 4);
 	i = 0;
 	while (read(fd, vm->arena + vm->aspace * p + i, 1) == 1
@@ -115,6 +102,7 @@ void	load_champs(struct s_vm *vm)
 	int		p;
 	int		fd;
 
+	ft_printf("Introducing contestants...\n");
 	p = 0;
 	vm->asize = MEM_SIZE;
 	vm->aspace = vm->asize / vm->players;
@@ -124,7 +112,9 @@ void	load_champs(struct s_vm *vm)
 			exit((ft_printf("\e[31;1mError (file %s)\e[0m: %s\n", vm->champs[p],
 							strerror(errno)) & 1) | 1);
 		read_champ(vm, p, fd);
-		ft_printf("Champ %s loaded successfully\n", vm->headers[p].prog_name);
+		ft_printf("* Player %d, weighing %u bytes, \"%s\" (\"%s\") !\n",
+			p + 1, vm->headers[p].prog_size, vm->headers[p].prog_name,
+			vm->headers[p].comment);
 		close(fd);
 		p++;
 	}
