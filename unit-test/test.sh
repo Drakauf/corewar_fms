@@ -1,40 +1,34 @@
 #!/bin/bash
 
-make -C ../corewar
-make -C ../asm
+make -C ../corewar >& /dev/null
+make -C ../asm >& /dev/null
 
-FILES=$(find asm_files -type f)
-
-if [ ! -x ../asm/asm ]
+if [ ! -x ../corewar/corewar ] || [ ! -x ../asm/asm ] || [ ! -x ../orig/asm ] || [ ! -x ../orig/corewar ]
 then
-	echo "Missing binary asm"
-else
-	mv ../asm/asm ./
+	echo "Missing binaries."
+	exit
 fi
+
+cp ../corewar/corewar ./
+cp ../asm/asm ./
+cp ../orig/asm ./o_asm
+cp ../orig/corewar ./o_corewar
 
 for FILE in $FILES
 do
-	CHECKER=$(echo $FILE | sed 's/asm_files/asm_tests/g' | sed 's/\.s/\.sh/g')
-	/bin/bash $CHECKER
-done
-
-rm -f asm
-
-FILES=$(find cw_files -type f)
-
-if [ ! -x ../corewar/corewar ]
-then
-	echo "Missing binary corewar"
-	FILES=""
-else
-	mv ../corewar/corewar ./
-fi
-
-
-for FILE in $FILES
-do
-	CHECKER=$(echo $FILE | sed 's/cw_files/cw_tests/g' | sed 's/\.cor/\.sh/g')
-	/bin/bash $CHECKER
+	echo -e "\033[33;1m$FILE\033[0m"
+	tail -n 1 $FILE
+	./asm $FILE -o test.cor
+	if [ -f test.cor ]
+	then
+		./o_asm $FILE
+		diff --text ${FILE/.s/.cor} test.cor | sed 's/^</[31;1m</;s/^>/[32;1m>/;s/$/[0m/'
+		rm -f ${FILE/.s/.cor}
+	fi
+	rm -f test.cor
 done
 
 rm -f corewar
+rm -f asm
+rm -f o_asm
+rm -f o_corewar
