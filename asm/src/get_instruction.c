@@ -6,7 +6,7 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/25 19:02:23 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 11:19:19 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 16:11:55 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -40,6 +40,17 @@ static int		push_instruction(char **s, char *mnemonic, t_data *d, t_synt_tree **
 	return (opcode);
 }
 
+/*
+** is_not_space_or_label_end() -> incremente s tant que le caractere est valide
+**     et different de ':'.
+**
+** si mnemonic fini par ':' ou commence par '.', c'est un label ou une section.
+**
+** push_instruction() -> push l'instruction dans la liste chainee (tree)
+**
+** get_operand() -> recupere les operandes et les ajoute dans tree->child
+*/
+
 extern char		*get_instruction(char *s, t_data *d, t_synt_tree **tree)
 {
 	char		*mnemonic;
@@ -57,7 +68,7 @@ extern char		*get_instruction(char *s, t_data *d, t_synt_tree **tree)
 		return (push_section_comment_with_argument(s, mnemonic, d, tree));
 	if (*mnemonic == '.')
 	{
-		ft_perror(mnemonic, "imaginary section", &d->p, d);
+		ft_perror(mnemonic, "unknown section", &d->p, d);
 		return (skip_all_but('\n', s));
 	}
 	d->start = d->start;

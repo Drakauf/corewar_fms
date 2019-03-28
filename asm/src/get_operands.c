@@ -6,7 +6,7 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/25 19:11:46 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 11:43:05 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 16:28:37 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -41,6 +41,29 @@ static char		*goto_operand_end(char *s, t_data *d)
 	}
 	return (s);
 }
+
+/*
+** skip_spaces()
+**     - Passe les espaces avant l'operande
+**
+** goto_opernd_end()
+**     - Incremente s jusqu'au premier
+**       ' ' '\n' ',' '\0' ou caractere invalide
+**
+** write_operand_into_tree()
+**     - Si l'operande est valide (lexicalement),
+**       l'ajoute a tree.
+**     - Si l'erreur est 'fatale',
+**       saute tout le reste de la ligne.
+**	   - Si l'erreur n'est pas 'fatale', saute l'operande.
+**
+** check_operands_syntax_and_type()
+**     - verifie la syntaxe des operandes ainsi que leurs types.
+**
+** update_current_addr()
+**     - calcul la taille de la nouvelle instruction,
+**       et l'ajoute a la position actuelle.
+*/
 
 extern char		*get_operands(char *s, t_data *d)
 {

@@ -6,33 +6,13 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/16 00:41:35 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 17:04:17 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 15:50:16 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "../inc/asm.h"
-/*
-const t_inst_info	g_inst_info[TOTAL_INST] = {
-	{0, {0}, {{0}, {0}, {0}}},
-	{1, {T_DIR, 0, 0}, {{0, 0, M_4}, {0}, {0}}},							// live
-	{2, {T_DI, T_REG}, {{0, M_2, M_4}, {M_1}, {0}}},						// ld (mov)
-	{2, {T_REG, T_RI}, {{M_1}, {M_1, M_2}, {0}}},							// st (mov)
-	{3, {T_REG, T_REG, T_REG}, {{M_1}, {M_1}, {M_1}}},						// add
-	{3, {T_REG, T_REG, T_REG}, {{M_1}, {M_1}, {M_1}}},						// sub
-	{3, {T_RDI, T_RDI, T_REG}, {{M_1, M_2, M_4}, {M_1, M_2, M_4}, {M_1}}},	// and
-	{3, {T_RDI, T_RDI, T_REG}, {{M_1, M_2, M_4}, {M_1, M_2, M_4}, {M_1}}},	// or
-	{3, {T_RDI, T_RDI, T_REG}, {{M_1, M_2, M_4}, {M_1, M_2, M_4}, {M_1}}},	// xor
-	{1, {T_DIR}, {{0, 0, M_2}, {0}, {0}}},									// zjmp (jz)
-	{3, {T_RDI, T_RD, T_REG}, {{M_1, M_2, M_2}, {M_1, 0, M_2}, {M_1}}},		// ldi (mov)
-	{3, {T_REG, T_RDI, T_RD}, {{M_1}, {M_1, M_2, M_2}, {M_1, 0, M_2}}},		// sti (mov)
-	{1, {T_DIR}, {{0, 0, M_2}, {0}, {0}}},									// fork
-	{2, {T_DI, T_REG}, {{0, M_2, M_4}, {M_1}, {0}}},						// lld (lmov)
-	{3, {T_RDI, T_RD, T_REG}, {{M_1, M_2, M_2}, {M_1, 0, M_2}, {M_1}}},		// lldi (lmov)
-	{1, {T_DIR}, {{0, 0, M_2}, {0}, {0}}},									// lfork
-	{1, {T_REG}, {{M_1}, {0}, {0}}},										// aff (nop)
-};
-*/
+
 const t_inst_info	g_inst_info[TOTAL_INST_NUMBER] = {
 	{0, {0}},
 	{1, {T_DIR, 0, 0}},			// live
