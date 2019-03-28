@@ -1,32 +1,38 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   check_operands_type.c                            .::    .:/ .      .::   */
+/*   skip_operand_after_error.c                       .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/03/20 14:46:04 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/20 17:17:04 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Created: 2019/03/28 11:38:16 by fcordon      #+#   ##    ##    #+#       */
+/*   Updated: 2019/03/28 11:38:33 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../inc/asm.h"
+#include "asm.h"
 
-void	check_operands_syntax_and_type(t_synt_tree *t, t_data *d)
+extern int		skip_operand_after_error(char **s)
 {
-	t_child		*c;
-	int			i;
+	char	*nl;
+	char	*comma;
 
-	c = t->child;
-	i = 0;
-	t->fmt[0] = 0;
-	t->fmt[1] = 0;
-	t->fmt[2] = 0;
-	if (d->syntax == ATNT)
-		check_atnt_syntax(c, d, t);
-	else if (d->syntax == INTL)
-		check_intel_syntax(c, d, t);
-	else
-		check_default_syntax(c, d, t);
+	if ((nl = ft_strchr(*s, '\n')) > (comma = ft_strchr(*s, ',')))
+	{
+		if (comma == NULL)
+		{
+			*s = nl;
+			return (0);
+		}
+		*s = comma;
+		return (0);
+	}
+	if (nl)
+	{
+		*s = nl;
+		return (0);
+	}
+	*s = ft_strchr(*s, '\0');
+	return (-1);
 }

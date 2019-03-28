@@ -6,7 +6,7 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/25 19:02:23 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/26 19:12:12 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 11:19:19 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -20,12 +20,13 @@ static int		push_instruction(char **s, char *mnemonic, t_data *d, t_synt_tree **
 	opcode = get_opcode(mnemonic, d);
 	if (opcode == -1)
 	{
-		ft_perror(mnemonic, "unknown mnemonic", &d->p, d);
+		ft_perror(NULL, "unknown mnemonic", &d->p, d);
 		*s = skip_all_but('\n', *s);
 		return (ERROR);
 	}
 	if (**s == '\0' || **s == '\n')
 	{
+		d->p.col += *s - d->start;
 		ft_perror(mnemonic, "too few operands", &d->p, d);
 		return (ERROR);
 	}
@@ -42,12 +43,11 @@ static int		push_instruction(char **s, char *mnemonic, t_data *d, t_synt_tree **
 extern char		*get_instruction(char *s, t_data *d, t_synt_tree **tree)
 {
 	char		*mnemonic;
-	char		*start;
 
-	start = s;
+	d->start = s;
 	while (is_not_space_or_label_end(*s, d))
 		s++;
-	mnemonic = ft_strndup(start, s - start);
+	mnemonic = ft_strndup(d->start, s - d->start);
 
 	if (*s == ':')
 		return (push_new_label(s + 1, mnemonic, d, tree));
@@ -60,8 +60,9 @@ extern char		*get_instruction(char *s, t_data *d, t_synt_tree **tree)
 		ft_perror(mnemonic, "imaginary section", &d->p, d);
 		return (skip_all_but('\n', s));
 	}
+	d->start = d->start;
 	if (push_instruction(&s, mnemonic, d, tree) == ERROR)
 		return (s);
-	d->p.col += s - start;
+	d->p.col += s - d->start;
 	return (get_operands(s, d));
 }
