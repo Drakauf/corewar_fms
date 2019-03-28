@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 11:17:29 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 12:01:44 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 14:44:40 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -117,6 +117,7 @@ struct	s_proc
 	int				pcount;
 	int				lives;
 	int				number;
+	int				pnum;
 	int				cooldown;
 	int				last_it;
 	int				last_op;
@@ -165,6 +166,7 @@ struct	s_vm
 	int				tcycles;
 	int				lives;
 	int				llives[MAX_PLAYERS];
+	int				next_pnum;
 	int				checks;
 	int				mchecks;
 	int				players;
@@ -273,6 +275,6 @@ void				create_processes(struct s_vm *vm);
 void				kill_process(struct s_proc **proc, struct s_vm *vm,\
 					struct s_proc *last);
 void				fork_process(struct s_vm *vm, struct s_proc *proc, int param);
-struct s_proc		*fresh_process(int pn, int pc);
+struct s_proc		*fresh_process(int pn, int pc, struct s_vm *vm);
 
 #endif

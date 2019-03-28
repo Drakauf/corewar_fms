@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 13:33:50 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 12:24:18 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 14:57:12 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -162,6 +162,8 @@ int		do_load(unsigned char c, struct s_proc *p, struct s_vm *vm)
 
 int		live(struct s_vm *vm, struct s_proc *p)
 {
+	if (vm->verbose & VOPERS)
+		ft_printf("P%5d | live %d\n", p->pnum, p->last_p1);
 	if (p->last_p1 < -vm->players || p->last_p1 >= 0)
 	{
 		set_pc(p, vm, 5);
@@ -185,6 +187,8 @@ int		ld(struct s_vm *vm, struct s_proc *p)
 		set_pc(p, vm, param_size(p->last_op & 240U, p));
 		return (0);
 	}
+	if (vm->verbose & VOPERS)
+		ft_printf("P%5d | ld %d r%d\n", p->pnum, p->last_p1, p->last_p2);
 	if (fparam(p->last_op) == 2)
 		p->regs[p->last_p2 - 1] = p->last_p1;
 	else
@@ -202,6 +206,8 @@ int		st(struct s_vm *vm, struct s_proc *p)
 		set_pc(p, vm, param_size(p->last_op & 240U, p));
 		return (0);
 	}
+	if (vm->verbose & VOPERS)
+		ft_printf("P%5d | st r%d %d\n", p->pnum, p->last_p1, p->last_p2);
 	if (sparam(p->last_op) == 1)
 		set_int(vm, p->pcount + (p->regs[p->last_p2 - 1] % IDX_MOD), p->number,
 			p->regs[p->last_p1 - 1]);
@@ -221,6 +227,9 @@ int		add(struct s_vm *vm, struct s_proc *p)
 		set_pc(p, vm, param_size(p->last_op, p));
 		return (0);
 	}
+	if (vm->verbose & VOPERS)
+		ft_printf("P%5d | add r%d r%d r%d\n", p->pnum, p->last_p1, p->last_p2,
+			p->last_p3);
 	p->regs[p->last_p3 - 1] = p->regs[p->last_p2 - 1] + p->regs[p->last_p1 - 1];
 	set_pc(p, vm, 5);
 	return (p->regs[p->last_p3 - 1] == 0);
@@ -235,6 +244,9 @@ int		sub(struct s_vm *vm, struct s_proc *p)
 		set_pc(p, vm, param_size(p->last_op, p));
 		return (0);
 	}
+	if (vm->verbose & VOPERS)
+		ft_printf("P%5d | sub r%d r%d r%d\n", p->pnum, p->last_p1, p->last_p2,
+			p->last_p3);
 	p->regs[p->last_p3 - 1] = p->regs[p->last_p2 - 1] - p->regs[p->last_p1 - 1];
 	set_pc(p, vm, 5);
 	return (p->regs[p->last_p3 - 1] == 0);
@@ -243,6 +255,7 @@ int		sub(struct s_vm *vm, struct s_proc *p)
 int		and(struct s_vm *vm, struct s_proc *p)
 {
 	t_reg	result;
+	t_reg	bitset;
 
 	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
 		tparam(p->last_op) != 1 ||
@@ -260,11 +273,15 @@ int		and(struct s_vm *vm, struct s_proc *p)
 	else
 		result = get_int(vm->arena, p->pcount, p->last_p1 % IDX_MOD);
 	if (sparam(p->last_op) == 1)
-		result &= p->regs[p->last_p2 - 1];
+		bitset = p->regs[p->last_p2 - 1];
 	else if (sparam(p->last_op) == 2)
-		result &= p->last_p2;
+		bitset = p->last_p2;
 	else
-		result &= get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
+		bitset = get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
+	if (vm->verbose & VOPERS)
+		ft_printf("P%5d | and %d %d r%d\n", p->pnum, result, bitset,
+			p->last_p3);
+	result &= bitset;
 	p->regs[p->last_p3 - 1] = result;
 	set_pc(p, vm, param_size(p->last_op, p));
 	return (p->regs[p->last_p3 - 1] == 0);
@@ -273,6 +290,7 @@ int		and(struct s_vm *vm, struct s_proc *p)
 int		or(struct s_vm *vm, struct s_proc *p)
 {
 	t_reg	result;
+	t_reg	bitset;
 
 	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
 		tparam(p->last_op) != 1 ||
@@ -290,11 +308,15 @@ int		or(struct s_vm *vm, struct s_proc *p)
 	else
 		result = get_int(vm->arena, p->pcount, p->last_p1 % IDX_MOD);
 	if (sparam(p->last_op) == 1)
-		result |= p->regs[p->last_p2 - 1];
+		bitset = p->regs[p->last_p2 - 1];
 	else if (sparam(p->last_op) == 2)
-		result |= p->last_p2;
+		bitset = p->last_p2;
 	else
-		result |= get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
+		bitset = get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
+	if (vm->verbose & VOPERS)
+		ft_printf("P%5d | or %d %d r%d\n", p->pnum, result, bitset,
+			p->last_p3);
+	result |= bitset;
 	p->regs[p->last_p3 - 1] = result;
 	set_pc(p, vm, param_size(p->last_op, p));
 	return (p->regs[p->last_p3 - 1] == 0);
@@ -303,6 +325,7 @@ int		or(struct s_vm *vm, struct s_proc *p)
 int		xor(struct s_vm *vm, struct s_proc *p)
 {
 	t_reg	result;
+	t_reg	bitset;
 
 	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
 		tparam(p->last_op) != 1 ||
@@ -320,11 +343,15 @@ int		xor(struct s_vm *vm, struct s_proc *p)
 	else
 		result = get_int(vm->arena, p->pcount, p->last_p1 % IDX_MOD);
 	if (sparam(p->last_op) == 1)
-		result ^= p->regs[p->last_p2 - 1];
+		bitset = p->regs[p->last_p2 - 1];
 	else if (sparam(p->last_op) == 2)
-		result ^= p->last_p2;
+		bitset = p->last_p2;
 	else
-		result ^= get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
+		bitset = get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
+	if (vm->verbose & VOPERS)
+		ft_printf("P%5d | xor %d %d r%d\n", p->pnum, result, bitset,
+			p->last_p3);
+	result ^= bitset;
 	p->regs[p->last_p3 - 1] = result;
 	set_pc(p, vm, param_size(p->last_op, p));
 	return (p->regs[p->last_p3 - 1] == 0);
@@ -338,15 +365,22 @@ int		zjmp(struct s_vm *vm, struct s_proc *p)
 		p->pcount = (p->pcount + p->last_p1) % MEM_SIZE;
 		if (p->pcount < 0)
 			p->pcount += MEM_SIZE;
+		if (vm->verbose & VOPERS)
+			ft_printf("P%5d | zjmp %d OK\n", p->pnum, p->last_p1);
 	}
 	else
+	{
 		p->pcount = (p->pcount + 3) % MEM_SIZE;
+		if (vm->verbose & VOPERS)
+			ft_printf("P%5d | zjmp %d FAILED\n", p->pnum, p->last_p1);
+	}
 	return (p->carry);
 }
 
 int		ldi(struct s_vm *vm, struct s_proc *p)
 {
 	int	index;
+	int	idxsum;
 
 	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
 		sparam(p->last_op) == 3 || tparam(p->last_op) != 1 ||
@@ -364,9 +398,18 @@ int		ldi(struct s_vm *vm, struct s_proc *p)
 	else
 		index = get_int(vm->arena, p->pcount, p->last_p1 % IDX_MOD);
 	if (sparam(p->last_op) == 1)
-		index += p->regs[p->last_p2 - 1];
+		idxsum = p->regs[p->last_p2 - 1];
 	else
-		index += p->last_p2;
+		idxsum = p->last_p2;
+	if (vm->verbose & VOPERS)
+	{
+		ft_printf("P%5d | ldi %d %d r%d\n", p->pnum,
+			p->last_p1, p->last_p2, p->last_p3);
+		ft_printf("       | -> load from %d + %d = %d (with pc and mod %d)\n",
+			index, idxsum, index + idxsum,
+			(p->pcount + (index + idxsum) % IDX_MOD + MEM_SIZE) % MEM_SIZE);
+	}
+	index += idxsum;
 	p->regs[p->last_p3 - 1] = get_int(vm->arena, p->pcount, index % IDX_MOD);
 	set_pc(p, vm, param_size(p->last_op, p));
 	return (p->regs[p->last_p3 - 1] == 0);
@@ -375,6 +418,7 @@ int		ldi(struct s_vm *vm, struct s_proc *p)
 int		sti(struct s_vm *vm, struct s_proc *p)
 {
 	int	index;
+	int idxsum;
 
 	if (fparam(p->last_op) != 1 || sparam(p->last_op) == 0 ||
 		tparam(p->last_op) == 0 || tparam(p->last_op) == 3 ||
@@ -392,9 +436,18 @@ int		sti(struct s_vm *vm, struct s_proc *p)
 	else
 		index = get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
 	if (tparam(p->last_op) == 1)
-		index += p->regs[p->last_p3 - 1];
+		idxsum = p->regs[p->last_p3 - 1];
 	else
-		index += p->last_p3;
+		idxsum = p->last_p3;
+	if (vm->verbose & VOPERS)
+	{
+		ft_printf("P%5d | sti r%d %d %d\n", p->pnum,
+			p->last_p1, p->last_p2, p->last_p3);
+		ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n",
+			index, idxsum, index + idxsum,
+			(p->pcount + (index + idxsum) % IDX_MOD + MEM_SIZE) % MEM_SIZE);
+	}
+	index += idxsum;
 	set_int(vm, p->pcount + (index % IDX_MOD), p->number, p->regs[p->last_p1 - 1]);
 	set_pc(p, vm, param_size(p->last_op, p));
 	return (p->carry);
@@ -404,6 +457,11 @@ int		cfork(struct s_vm *vm, struct s_proc *p)
 {
 	p->last_p1 %= IDX_MOD;
 	fork_process(vm, p, p->last_p1);
+	if (vm->verbose & VOPERS)
+	{
+		ft_printf("P%5d | fork %d (%d)\n", p->pnum, p->last_p1,
+			(p->pcount + p->last_p1 + MEM_SIZE) % MEM_SIZE);
+	}
 	set_pc(p, vm, 3);
 	return (p->carry);
 }
@@ -420,6 +478,8 @@ int		lld(struct s_vm *vm, struct s_proc *p)
 		p->regs[p->last_p2 - 1] = p->last_p1;
 	else
 		p->regs[p->last_p2 - 1] = get_int(vm->arena, p->pcount, p->last_p1);
+	if (vm->verbose & VOPERS)
+		ft_printf("P%5d | lld %d r%d\n", p->pnum, p->last_p1, p->last_p2);
 	set_pc(p, vm, param_size(p->last_op & 240U, p));
 	return (p->regs[p->last_p2 - 1] == 0);
 }
@@ -427,6 +487,7 @@ int		lld(struct s_vm *vm, struct s_proc *p)
 int		lldi(struct s_vm *vm, struct s_proc *p)
 {
 	int	index;
+	int idxsum;
 
 	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
 		sparam(p->last_op) == 3 || tparam(p->last_op) != 1 ||
@@ -444,9 +505,18 @@ int		lldi(struct s_vm *vm, struct s_proc *p)
 	else
 		index = get_int(vm->arena, p->pcount, p->last_p1 % IDX_MOD);
 	if (sparam(p->last_op) == 1)
-		index += p->regs[p->last_p2 - 1];
+		idxsum = p->regs[p->last_p2 - 1];
 	else
-		index += p->last_p2;
+		idxsum = p->last_p2;
+	if (vm->verbose & VOPERS)
+	{
+		ft_printf("P%5d | ldi %d %d r%d\n", p->pnum,
+			p->last_p1, p->last_p2, p->last_p3);
+		ft_printf("       | -> long load from %d + %d = %d (with pc and mod %d)\n",
+			index, idxsum, index + idxsum,
+			(p->pcount + index + idxsum + MEM_SIZE) % MEM_SIZE);
+	}
+	index += idxsum;
 	p->regs[p->last_p3 - 1] = get_int(vm->arena, p->pcount, index);
 	set_pc(p, vm, param_size(p->last_op, p));
 	return (p->regs[p->last_p3 - 1] == 0);
@@ -455,6 +525,11 @@ int		lldi(struct s_vm *vm, struct s_proc *p)
 int		lfork(struct s_vm *vm, struct s_proc *p)
 {
 	fork_process(vm, p, p->last_p1);
+	if (vm->verbose & VOPERS)
+	{
+		ft_printf("P%5d | lfork %d (%d)\n", p->pnum, p->last_p1,
+			(p->pcount + p->last_p1 + MEM_SIZE) % MEM_SIZE);
+	}
 	set_pc(p, vm, 3);
 	return (p->carry);
 }
@@ -469,6 +544,8 @@ int		aff(struct s_vm *vm, struct s_proc *p)
 		return (0);
 	}
 	c = (char)p->regs[p->last_p1 - 1];
+	if (vm->verbose & VOPERS)
+		ft_printf("Aff: %c\n", c);
 	if (!(vm->flags & F_GRAPH))
 		write(1, &c, 1);
 	set_pc(p, vm, 3);

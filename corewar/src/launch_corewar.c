@@ -6,7 +6,7 @@
 /*   By: shthevak <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/22 15:59:24 by shthevak     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 11:26:30 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 14:39:36 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -34,6 +34,7 @@ void	launch_corewar(struct s_vm *vm)
 	int		max;
 	int		imax;
 
+	vm->next_pnum = 1;
 	load_champs(vm);
 	create_processes(vm);
 	init_params(vm);
