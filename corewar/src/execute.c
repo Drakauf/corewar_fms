@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 13:33:50 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 14:57:12 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 16:29:19 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,12 +15,12 @@
 
 void	set_pc(struct s_proc *p, struct s_vm *vm, int x)
 {
-	int		i;
+	int				i;
 
 	if (vm->verbose & VPCMOV)
 	{
 		ft_printf("ADV %d (0x%.4x -> 0x%.4x) ", x, (unsigned int)p->pcount,
-			(unsigned int)((p->pcount + x) % MEM_SIZE));
+			(unsigned int)(p->pcount + x));
 		i = 0;
 		while (i < x)
 		{
@@ -93,39 +93,18 @@ int		wrong_op(struct s_proc *p)
 	p->last_p1 = 0;
 	p->last_p2 = 0;
 	p->last_p3 = 0;
-	p->carry = 0;
 	p->pcount = (p->pcount + 1) % MEM_SIZE;
 	return (0);
 }
 
-int		exec_sumcalc(struct s_proc *p, struct s_vm *vm, unsigned char op)
-{
-	get_params(p, vm, op);
-	p->cooldown = 10;
-	return (1);
-}
-
-int		exec_bitcalc(struct s_proc *p, struct s_vm *vm, unsigned char op)
-{
-	get_params(p, vm, op);
-	p->cooldown = 6;
-	return (1);
-}
-
 int		do_aff(unsigned char c, struct s_proc *p, struct s_vm *vm)
 {
-	p->last_op = *((unsigned char *)vm->arena + ((p->pcount + 1) % MEM_SIZE));
-	get_param1(p, vm, 64U, p->pcount + 2);
 	p->cooldown = 2;
 	return (1);
 }
 
 int		do_live_or_pc(unsigned char c, struct s_proc *p, struct s_vm *vm)
 {
-	if (c == 1)
-		get_param1(p, vm, 128U, p->pcount + 1);
-	else
-		get_param1(p, vm, 192U, p->pcount + 1);
 	if (c == 1)
 		p->cooldown = 10;
 	else if (c == 9)
@@ -139,16 +118,15 @@ int		do_live_or_pc(unsigned char c, struct s_proc *p, struct s_vm *vm)
 
 int		do_operation(unsigned char c, struct s_proc *p, struct s_vm *vm)
 {
-	p->last_op = *((unsigned char *)vm->arena + ((p->pcount + 1) % MEM_SIZE));
 	if (c == 4 || c == 5)
-		return (exec_sumcalc(p, vm, p->last_op));
-	return (exec_bitcalc(p, vm, p->last_op));
+		p->cooldown = 10;
+	else
+		p->cooldown = 6;
+	return (1);
 }
 
 int		do_load(unsigned char c, struct s_proc *p, struct s_vm *vm)
 {
-	p->last_op = *((unsigned char *)vm->arena + ((p->pcount + 1) % MEM_SIZE));
-	get_params(p, vm, p->last_op);
 	if (c == 2 || c == 3)
 		p->cooldown = 5;
 	else if (c == 10 || c == 11)
@@ -164,10 +142,11 @@ int		live(struct s_vm *vm, struct s_proc *p)
 {
 	if (vm->verbose & VOPERS)
 		ft_printf("P%5d | live %d\n", p->pnum, p->last_p1);
+	p->lives = vm->tcycles;
 	if (p->last_p1 < -vm->players || p->last_p1 >= 0)
 	{
 		set_pc(p, vm, 5);
-		return (0);
+		return (p->carry);
 	}
 	vm->llives[-1 - p->last_p1] = vm->tcycles;
 	vm->lives += 1;
@@ -175,7 +154,6 @@ int		live(struct s_vm *vm, struct s_proc *p)
 		ft_printf("Player %d (%s) is said to be alive\n", -p->last_p1,
 			vm->headers[-1 - p->last_p1].prog_name);
 	set_pc(p, vm, 5);
-	p->lives = vm->tcycles;
 	return (p->carry);
 }
 
@@ -185,7 +163,7 @@ int		ld(struct s_vm *vm, struct s_proc *p)
 		tparam(p->last_op) != 0 || invalid_reg(p->last_p2))
 	{
 		set_pc(p, vm, param_size(p->last_op & 240U, p));
-		return (0);
+		return (p->carry);
 	}
 	if (vm->verbose & VOPERS)
 		ft_printf("P%5d | ld %d r%d\n", p->pnum, p->last_p1, p->last_p2);
@@ -204,7 +182,7 @@ int		st(struct s_vm *vm, struct s_proc *p)
 		(sparam(p->last_op) == 1 && invalid_reg(p->last_p2)))
 	{
 		set_pc(p, vm, param_size(p->last_op & 240U, p));
-		return (0);
+		return (p->carry);
 	}
 	if (vm->verbose & VOPERS)
 		ft_printf("P%5d | st r%d %d\n", p->pnum, p->last_p1, p->last_p2);
@@ -225,7 +203,7 @@ int		add(struct s_vm *vm, struct s_proc *p)
 		invalid_reg(p->last_p2) || invalid_reg(p->last_p3))
 	{
 		set_pc(p, vm, param_size(p->last_op, p));
-		return (0);
+		return (p->carry);
 	}
 	if (vm->verbose & VOPERS)
 		ft_printf("P%5d | add r%d r%d r%d\n", p->pnum, p->last_p1, p->last_p2,
@@ -242,7 +220,7 @@ int		sub(struct s_vm *vm, struct s_proc *p)
 		invalid_reg(p->last_p2) || invalid_reg(p->last_p3))
 	{
 		set_pc(p, vm, param_size(p->last_op, p));
-		return (0);
+		return (p->carry);
 	}
 	if (vm->verbose & VOPERS)
 		ft_printf("P%5d | sub r%d r%d r%d\n", p->pnum, p->last_p1, p->last_p2,
@@ -264,7 +242,7 @@ int		and(struct s_vm *vm, struct s_proc *p)
 		invalid_reg(p->last_p3))
 	{
 		set_pc(p, vm, param_size(p->last_op, p));
-		return (0);
+		return (p->carry);
 	}
 	if (fparam(p->last_op) == 1)
 		result = p->regs[p->last_p1 - 1];
@@ -299,7 +277,7 @@ int		or(struct s_vm *vm, struct s_proc *p)
 		invalid_reg(p->last_p3))
 	{
 		set_pc(p, vm, param_size(p->last_op, p));
-		return (0);
+		return (p->carry);
 	}
 	if (fparam(p->last_op) == 1)
 		result = p->regs[p->last_p1 - 1];
@@ -334,7 +312,7 @@ int		xor(struct s_vm *vm, struct s_proc *p)
 		invalid_reg(p->last_p3))
 	{
 		set_pc(p, vm, param_size(p->last_op, p));
-		return (0);
+		return (p->carry);
 	}
 	if (fparam(p->last_op) == 1)
 		result = p->regs[p->last_p1 - 1];
@@ -389,7 +367,7 @@ int		ldi(struct s_vm *vm, struct s_proc *p)
 		invalid_reg(p->last_p3))
 	{
 		set_pc(p, vm, param_size(p->last_op, p));
-		return (0);
+		return (p->carry);
 	}
 	if (fparam(p->last_op) == 1)
 		index = p->regs[p->last_p1 - 1];
@@ -427,7 +405,7 @@ int		sti(struct s_vm *vm, struct s_proc *p)
 		invalid_reg(p->last_p1))
 	{
 		set_pc(p, vm, param_size(p->last_op, p));
-		return (0);
+		return (p->carry);
 	}
 	if (sparam(p->last_op) == 1)
 		index = p->regs[p->last_p2 - 1];
@@ -472,7 +450,7 @@ int		lld(struct s_vm *vm, struct s_proc *p)
 		tparam(p->last_op) != 0 || invalid_reg(p->last_p2))
 	{
 		set_pc(p, vm, param_size(p->last_op & 240U, p));
-		return (0);
+		return (p->carry);
 	}
 	if (fparam(p->last_op) == 2)
 		p->regs[p->last_p2 - 1] = p->last_p1;
@@ -496,7 +474,7 @@ int		lldi(struct s_vm *vm, struct s_proc *p)
 		invalid_reg(p->last_p3))
 	{
 		set_pc(p, vm, param_size(p->last_op, p));
-		return (0);
+		return (p->carry);
 	}
 	if (fparam(p->last_op) == 1)
 		index = p->regs[p->last_p1 - 1];
@@ -540,8 +518,8 @@ int		aff(struct s_vm *vm, struct s_proc *p)
 
 	if (fparam(p->last_op) != 1 || invalid_reg(p->last_p1))
 	{
-		set_pc(p, vm, 3);
-		return (0);
+		set_pc(p, vm, 2);
+		return (p->carry);
 	}
 	c = (char)p->regs[p->last_p1 - 1];
 	if (vm->verbose & VOPERS)
@@ -560,6 +538,15 @@ void	execute_last(struct s_proc *p, struct s_vm *vm)
 		&zjmp, &ldi, &sti, &cfork, &lld, &lldi, &lfork, &aff
 	};
 
+	p->last_op = *((unsigned char *)vm->arena + (p->pcount + 1) % MEM_SIZE);
+	if (p->last_it == 1)
+		get_param1(p, vm, 128U, (p->pcount + 1) % MEM_SIZE);
+	else if (p->last_it == 9 || p->last_it == 12 || p->last_it == 15)
+		get_param1(p, vm, 192U, (p->pcount + 1) % MEM_SIZE);
+	else if (p->last_it == 16)
+		get_param1(p, vm, 64U, (p->pcount + 2) % MEM_SIZE);
+	else
+		get_params(p, vm, p->last_op);
 	p->carry = opers[p->last_it - 1](vm, p);
 }
 

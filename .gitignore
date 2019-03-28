@@ -4,3 +4,5 @@ corewar/corewar
 *.dSYM
 *libft.a
 asm/asm
+output
+routput

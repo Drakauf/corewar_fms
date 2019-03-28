@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 11:17:29 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 14:44:40 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 15:18:34 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -160,6 +160,7 @@ struct	s_vm
 	int				aspace;
 	struct s_vdata	*data;
 	struct s_proc	*processes;
+	struct s_proc	*forks;
 	int				cycles;
 	int				dcycles;
 	int				kcycles;

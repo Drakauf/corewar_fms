@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 15:54:02 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 14:44:09 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 15:42:11 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -77,6 +77,16 @@ void	dump_memory(struct s_vm *vm)
 
 void	update_info(struct s_vm *vm)
 {
+	struct s_proc	*tmp;
+
+	if ((tmp = vm->forks) != NULL)
+	{
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = vm->processes;
+		vm->processes = vm->forks;
+		vm->forks = NULL;
+	}
 	if (vm->tcycles >= vm->dcycles && (vm->flags & F_DUMP))
 		dump_memory(vm);
 	if (++vm->cycles >= vm->kcycles)

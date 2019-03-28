@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:40:35 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 14:48:00 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 15:54:31 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -30,6 +30,7 @@ struct s_proc	*fresh_process(int pn, int pc, struct s_vm *vm)
 void			fork_process(struct s_vm *vm, struct s_proc *proc, int param)
 {
 	struct s_proc	*pnew;
+	struct s_proc	*tmp;
 
 	if (!(pnew = (struct s_proc *)malloc(sizeof(struct s_proc))))
 		exit((ft_printf("\e[31;1mError\e[0m: %s\n", strerror(ENOMEM)) & 1) | 1);
@@ -37,11 +38,10 @@ void			fork_process(struct s_vm *vm, struct s_proc *proc, int param)
 	pnew->pcount = (pnew->pcount + param) % MEM_SIZE;
 	if (pnew->pcount < 0)
 		pnew->pcount += MEM_SIZE;
-	pnew->lives = 0;
 	pnew->cooldown = 1;
 	pnew->pnum = vm->next_pnum++;
-	pnew->next = vm->processes;
-	vm->processes = pnew;
+	pnew->next = vm->forks;
+	vm->forks = pnew;
 }
 
 void			kill_process(struct s_proc **proc, struct s_vm *vm,\
@@ -49,9 +49,10 @@ void			kill_process(struct s_proc **proc, struct s_vm *vm,\
 {
 	struct s_proc	*tmp;
 
-	ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
-		(*proc)->pnum, vm->tcycles - (*proc)->lives,
-		vm->kcycles);
+	if (vm->verbose & VDEATHS)
+		ft_printf("Process %d hasn't lived for %d cycles (CTD %d)\n",
+			(*proc)->pnum, vm->tcycles - (*proc)->lives,
+			vm->kcycles);
 	tmp = (*proc)->next;
 	if (!last)
 	{
