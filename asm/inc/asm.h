@@ -6,7 +6,7 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/14 06:47:27 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/27 10:19:21 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 15:24:28 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,6 +24,11 @@ enum	e_inst
 };
 
 # define ERROR					-1
+# define FATAL_ERROR			-1
+# define IND_ERROR				NULL
+# define DIR_ERROR				NULL
+# define REG_ERROR				NULL
+# define ERROR_PTR				NULL
 
 # define DFLT					0
 # define ATNT					1
@@ -184,8 +189,10 @@ typedef struct		s_data
 	int					cur_addr;
 	char				*output;
 	char				*input;
+	char				*start;
 	struct s_synt_tree	*current;
 	struct s_synt_tree	*previous;
+	struct s_synt_tree	*t;
 	struct s_inst_info	*inst_info;
 }					t_data;
 
@@ -210,6 +217,11 @@ typedef struct		s_synt_tree
 	struct s_synt_tree	*next;
 	struct s_child		*child;
 }					t_synt_tree;
+
+const t_inst_info		g_inst_info[TOTAL_INST_NUMBER];
+const char				*g_dflt_inst_set[TOTAL_INST_NUMBER];
+const char				*g_altr_inst_set[TOTAL_INST_NUMBER];
+const t_inst_size		g_binsize[TOTAL_INST_NUMBER];
 
 /*
 ** get_arguments.c
@@ -332,8 +344,10 @@ extern void		update_current_addr(t_data *d);
 extern int		get_opcode(char *s, t_data *d);
 
 /*
-**
+** write_operand.c
 */
+
+extern int		write_operand_into_tree(char **s, t_data *d);
 
 /*
 ** free.c
@@ -343,8 +357,28 @@ extern void		free_all(t_data *d, t_synt_tree *tree);
 extern void		free_tree(t_synt_tree *t);
 
 /*
-**
+** push_new_operand.c
 */
+
+extern void	push_new_operand(char *s, t_data *d);
+
+/*
+** skip_operand_after_error.c
+*/
+
+extern int		skip_operand_after_error(char **s);
+
+/*
+** atnt_alternative_addr_syntax_arg1.c
+*/
+
+extern char		*get_arg_1(t_child *c, t_data *d, t_synt_tree *t, int i);
+
+/*
+** atnt_alternative_addr_syntax_arg2.c
+*/
+
+extern char		*get_arg_2(char *s, t_child *c, t_data *d, int i);
 
 /*
 **
@@ -365,19 +399,6 @@ extern void		free_tree(t_synt_tree *t);
 /*
 **
 */
-
-/*
-**
-*/
-
-/*
-**
-*/
-
-const t_inst_info		g_inst_info[TOTAL_INST_NUMBER];
-const char				*g_dflt_inst_set[TOTAL_INST_NUMBER];
-const char				*g_altr_inst_set[TOTAL_INST_NUMBER];
-const t_inst_size		g_binsize[TOTAL_INST_NUMBER];
 
 extern int	disassemble(char *file, int len);
 extern char		*big_endian_string(int n, int size, int new, int *len);
@@ -414,6 +435,7 @@ int		atnt_is_register(char *s, t_data *d, t_child *c, t_pos p);
 int		dflt_is_direct(char *s, t_data *d, t_child *c, t_pos p);
 int		dflt_is_indirect(char *s, t_data *d, t_child *c, t_pos p);
 int		dflt_is_register(char *s, t_data *d, t_child *c, t_pos p);
+
 /*
 ** label_struct.c
 */
@@ -421,34 +443,10 @@ int		dflt_is_register(char *s, t_data *d, t_child *c, t_pos p);
 extern t_label		*new_label(char *s);
 
 /*
-** atnt_check_mov_syntax.c
-*/
-/*
-extern int		atnt_check_mov_syntax(t_data *d, t_child *c,
-									t_synt_tree *tree, int n);
-*/
-
-/*
-** atnt_check_operand_type.c
-*/
-/*
-extern int		is_register(const char *s);
-extern int		is_direct_value(char *s, t_data *d);
-extern int		is_indirect_value(char *s, t_data *d);
-extern int		atnt_check_operand_type_syntax(t_data *d, t_child *c,
-											t_synt_tree *tree, int n);
-*/
-/*
-** atnt_check_operands.c
-*/
-/*
-extern void		check_operands_atnt(t_data *d, t_synt_tree *tree);
-extern int		altr_valid_label_syntax(const char *s);
-*/
-/*
 ** ft_perror.c
 */
 
-void	ft_perror(const char *prefix, const char *error, t_pos *p, t_data *d);
+extern void		ft_perror(const char *prefix, const char *error, t_pos *p, t_data *d);
+extern void		*perror_and_set_fmt(const char *e, t_pos *p, t_data *d, int *fmt);
 
 #endif

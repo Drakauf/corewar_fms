@@ -6,7 +6,7 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/16 00:41:35 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/26 19:13:04 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 15:27:52 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -69,11 +69,7 @@ int			main(int ac, char *av[])
 	ft_assert(ac > 5, TOO_MANY_ARGS);
 	get_arguments(av + 1, &data);
 	ft_assert(!(data.file = get_contents(data.input, &data.file_len)), OPEN_ERROR);
-	if (data.syntax == CSTYLE)
-	{
-		//convert_c_to_intel_style_assembly();
-	}
-	else if (data.output == NULL)
+	if (data.output == NULL)
 		return (disassemble(data.file, data.file_len));
 	general_parser(&data, &tree);
 	if (print_total_errors(&data, tree))
