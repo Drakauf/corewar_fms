@@ -6,7 +6,7 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/14 06:47:27 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 15:08:11 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 15:24:28 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -369,8 +369,16 @@ extern void	push_new_operand(char *s, t_data *d);
 extern int		skip_operand_after_error(char **s);
 
 /*
-**
+** atnt_alternative_addr_syntax_arg1.c
 */
+
+extern char		*get_arg_1(t_child *c, t_data *d, t_synt_tree *t, int i);
+
+/*
+** atnt_alternative_addr_syntax_arg2.c
+*/
+
+extern char		*get_arg_2(char *s, t_child *c, t_data *d, int i);
 
 /*
 **
