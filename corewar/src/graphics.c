@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 13:45:44 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 11:20:03 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/29 09:47:43 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -59,7 +59,7 @@ void		cw_init_window(struct s_vdata *data)
 	data->sy = MEM_LINES * (CHAR_SY + CHAR_VSP) + BORDER_SIZE * 2;
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 	data->win = SDL_CreateWindow("Corewar", SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED, data->sx, data->sy, SDL_WINDOW_BORDERLESS);
+		SDL_WINDOWPOS_UNDEFINED, data->sx, data->sy, 0);
 	data->rd = SDL_CreateRenderer(data->win, -1, 0);
 	data->tx = SDL_CreateTexture(data->rd, SDL_PIXELFORMAT_ARGB32,
 		SDL_TEXTUREACCESS_STREAMING, data->sx, data->sy);
@@ -263,6 +263,10 @@ void		cw_update_window(struct s_vm *vm)
 	struct s_vdata *data;
 
 	data = vm->data;
+	SDL_PollEvent(&(data->ev));
+	if ((data->ev.type == SDL_KEYDOWN && data->ev.key.keysym.sym == SDLK_ESCAPE)
+		|| data->ev.type == SDL_QUIT)
+		exit(0);
 	SDL_LockTexture(data->tx, NULL, (void **)&data->px, &data->pitch);
 	ft_memset(data->px, '\0', data->sy * data->pitch);
 	generate_borders(data);
