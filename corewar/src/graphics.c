@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 13:45:44 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/04 09:01:15 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/04 14:04:40 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -297,22 +297,84 @@ static int	draw_kill_time(struct s_vdata *data, struct s_vm *vm, int y)
 		x++;
 	}
 	draw_score((struct s_pos){data->tbx + 256 + CHAR_SP, y}, vm->kcycles - vm->cycles, COLOR_WHITE, data);
-	y += CHAR_SY + CHAR_VSP;
+	y += CHAR_SY + CHAR_VSP * 2;
 	return (y);
 }
 
-static void	generate_toolbar(struct s_vdata *data, struct s_vm *vm)
+static int	draw_process_count(struct s_vdata *data, struct s_vm *vm, int y)
 {
-	int		y;
+	int				i;
+	int				pl;
+	int				c;
+	int				x;
+	struct s_proc	*p;
+	char			*info = "Processes: ";
 
-	y = draw_ply_scores(data, vm);
-//	y += draw_live_loader(data, vm, y);
-//	y += draw_live_process(data, vm, y);
-	y = draw_kill_time(data, vm, y);
-//	y += draw_cycle_kill(data, vm, y);
+	pl = 0;
+	while (pl < vm->players)
+	{
+		x = data->tbx;
+		i = 0;
+		while (info[i])
+		{
+			x += draw_char(info[i], (struct s_pos){x, y},
+				g_color[pl + MAX_PLAYERS + 2], data);
+			i++;
+		}
+		c = 0;
+		p = vm->processes;
+		while (p)
+		{
+			c += (p->number - 1 == pl);
+			p = p->next;
+		}
+		draw_score((struct s_pos){x, y}, c, g_color[pl + MAX_PLAYERS + 2], data);
+		y += CHAR_SY + CHAR_VSP;
+		pl++;
+	}
+	y += CHAR_VSP;
+	return (y);
 }
 
-void		cw_update_window(struct s_vm *vm)
+static void	generate_toolbar(struct s_vdata *data, struct s_vm *vm, int last_frame)
+{
+	int		y;
+	int		i;
+	int		x;
+	char	*info = "Winner: ";
+	char	*disp = "Press any touch to continue";
+
+	y = draw_ply_scores(data, vm);
+	y = draw_kill_time(data, vm, y);
+	y = draw_process_count(data, vm, y);
+	if (last_frame)
+	{
+		x = data->tbx;
+		i = 0;
+		while (info[i])
+		{
+			x += draw_char(info[i], (struct s_pos){x, y}, COLOR_WHITE, data);
+			i++;
+		}
+		i = 0;
+		while (vm->headers[last_frame - 1].prog_name[i])
+		{
+			x += draw_char(vm->headers[last_frame - 1].prog_name[i],
+				(struct s_pos){x, y}, g_color[last_frame], data);
+			i++;
+		}
+		y += (CHAR_SY + CHAR_VSP) * 2;
+		i = 0;
+		x = data->tbx;
+		while (disp[i])
+		{
+			x += draw_char(disp[i], (struct s_pos){x, y}, COLOR_LNONE, data);
+			i++;
+		}
+	}
+}
+
+void		cw_update_window(struct s_vm *vm, int last_frame)
 {
 	struct s_vdata *data;
 
@@ -321,12 +383,18 @@ void		cw_update_window(struct s_vm *vm)
 	if ((data->ev.type == SDL_KEYDOWN && data->ev.key.keysym.sym == SDLK_ESCAPE)
 		|| data->ev.type == SDL_QUIT)
 		exit(0);
+	if (data->ev.type == SDL_KEYDOWN && data->ev.key.keysym.sym == SDLK_SPACE)
+	{
+		SDL_WaitEvent(&(data->ev));
+		while (data->ev.type != SDL_KEYDOWN || data->ev.key.keysym.sym != SDLK_SPACE)
+			SDL_WaitEvent(&(data->ev));
+	}
 	SDL_LockTexture(data->tx, NULL, (void **)&data->px, &data->pitch);
 	ft_memset(data->px, '\0', data->sy * data->pitch);
 	generate_borders(data);
 	generate_arena(data, vm->arena, vm->ainfo);
 	generate_processes(data, vm->processes);
-	generate_toolbar(data, vm);
+	generate_toolbar(data, vm, last_frame);
 	SDL_UnlockTexture(data->tx);
 	SDL_RenderCopy(data->rd, data->tx, NULL, NULL);
 	SDL_RenderPresent(data->rd);

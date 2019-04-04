@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 11:17:29 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/29 13:45:13 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/04 13:44:49 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -185,11 +185,10 @@ void	launch_corewar(struct s_vm *vm);
 void	load_champs(struct s_vm *vm);
 
 struct s_proc	*fresh_process(struct s_vm *vm, int pn, int pc);
-
-void	cw_init_window(struct s_vdata *data);
-void	cw_update_window(struct s_vm *vm);
-struct s_vm **get_vmp(void);
 */
+void	cw_init_window(struct s_vdata *data);
+void	cw_update_window(struct s_vm *vm, int last_frame);
+struct s_vm **get_vmp(void);
 
 
 /*

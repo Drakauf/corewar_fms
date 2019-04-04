@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 12:07:03 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/29 14:02:56 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/04 14:34:57 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -40,5 +40,4 @@ int		main(int argc, char **argv)
 	launch_corewar(&vm);
 	destroy(&vm);
 	get_vmp()[0] = NULL;
-	return (0);
 }
