@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 13:45:44 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/29 09:47:43 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/04 09:01:15 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,8 +15,8 @@
 #include <math.h>
 
 const int	g_color[2 * MAX_PLAYERS + 2] = {
-	COLOR_NONE, COLOR_ORANGE, COLOR_CYAN, COLOR_GREEN, COLOR_RED,
-	COLOR_LNONE, COLOR_LORANGE, COLOR_LCYAN, COLOR_LGREEN, COLOR_LRED
+	COLOR_NONE, COLOR_ORANGE, COLOR_GREEN, COLOR_CYAN, COLOR_RED,
+	COLOR_LNONE, COLOR_LORANGE, COLOR_LGREEN, COLOR_LCYAN, COLOR_LRED
 };
 
 extern int	*g_font[256];
@@ -35,6 +35,7 @@ static void	generate_borders(struct s_vdata *data)
 		while (++y < data->sy)
 		{
 			data->px[x + y * data->sx] = color;
+			data->px[(data->tbx - x - 1 - CHAR_SP / 2) + y * data->sx] = color;
 			data->px[(data->sx - x - 1) + y * data->sx] = color;
 		}
 	}
@@ -54,7 +55,7 @@ void		cw_init_window(struct s_vdata *data)
 {
 	int		t;
 
-	data->tbx = (MEM_COLS * (CHAR_SX * 2 + CHAR_SP)) + BORDER_SIZE;
+	data->tbx = (MEM_COLS * (CHAR_SX * 2 + CHAR_SP)) + BORDER_SIZE * 2 + CHAR_SP / 2;
 	data->sx = data->tbx + (TB_MAX_CHARS * CHAR_SX) + BORDER_SIZE;
 	data->sy = MEM_LINES * (CHAR_SY + CHAR_VSP) + BORDER_SIZE * 2;
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
@@ -178,8 +179,8 @@ void		draw_line(struct s_pos start, struct s_pos end, int color, struct s_vdata 
 	i = 0;
 	while (i <= size)
 	{
-		end.x = start.x + (dx * i);
-		end.y = start.y + (dy * i);
+		end.x = start.x + (dx * (double)i + 0.5);
+		end.y = start.y + (dy * (double)i + 0.5);
 		data->px[end.x + end.y * data->sx] = color;
 		i++;
 	}
@@ -204,6 +205,20 @@ int			draw_char(unsigned char c, struct s_pos p, int color, struct s_vdata *data
 	return (ix + CHAR_HSP);
 }
 
+void	draw_score(struct s_pos p, int lives, int color, struct s_vdata *data)
+{
+	int		i;
+	char	*c;
+
+	c = ft_itoa(lives);
+	i = 0;
+	while (c[i])
+	{
+		p.x += draw_char(c[i], p, color, data);
+		i++;
+	}
+}
+
 static int	draw_ply_scores(struct s_vdata *data, struct s_vm *vm)
 {
 	int		player;
@@ -211,9 +226,18 @@ static int	draw_ply_scores(struct s_vdata *data, struct s_vm *vm)
 	int		j;
 	int		x;
 	int		y;
+	char	*name = "Corewar - version 2.6";
 
 	player = 0;
-	y = BORDER_SIZE + 1;
+	y = BORDER_SIZE + CHAR_VSP / 2;
+	x = data->tbx;
+	i = 0;
+	while (name[i])
+	{
+		x += draw_char(name[i], (struct s_pos){x, y}, COLOR_WHITE, data);
+		i++;
+	}
+	y += (CHAR_SY + CHAR_VSP) * 2;
 	while (player < vm->players)
 	{
 		i = 0;
@@ -223,6 +247,7 @@ static int	draw_ply_scores(struct s_vdata *data, struct s_vm *vm)
 			x += draw_char(vm->headers[player].prog_name[i], (struct s_pos){x, y}, g_color[player + 1], data);
 			i++;
 		}
+		x += CHAR_HSP * 2;
 		x += draw_char('(', (struct s_pos){x, y}, g_color[player + 1], data);
 		j = 0;
 		while (vm->headers[player].comment[j] && i + j < TB_MAX_CHARS)
@@ -240,9 +265,39 @@ static int	draw_ply_scores(struct s_vdata *data, struct s_vm *vm)
 					(vm->llives[player] > vm->tcycles * x / j) ? g_color[player + 1] : COLOR_NONE, data);
 			x++;
 		}
+		draw_score((struct s_pos){data->tbx + 300 + CHAR_SP, y}, vm->llives[player], g_color[player + 2 + MAX_PLAYERS], data);
 		y += CHAR_SY + CHAR_VSP;
 		player++;
 	}
+	return (y);
+}
+
+static int	draw_kill_time(struct s_vdata *data, struct s_vm *vm, int y)
+{
+	char	*info = "Next kill operation:";
+	int		x;
+	int		i;
+	int		j;
+
+	x = data->tbx;
+	y += CHAR_SY * 2;
+	i = 0;
+	while (info[i])
+	{
+		x += draw_char(info[i], (struct s_pos){x, y}, COLOR_WHITE, data);
+		i++;
+	}
+	y += CHAR_SY + CHAR_VSP;
+	x = 0;
+	j = 256;
+	while (x < j)
+	{
+		draw_line((struct s_pos){x + data->tbx, y}, (struct s_pos){x + data->tbx, y + CHAR_SY - 1},
+				(vm->cycles * 256 / vm->kcycles > x) ? ((255 - x) * 65536 + 65536 - 256) : COLOR_NONE, data);
+		x++;
+	}
+	draw_score((struct s_pos){data->tbx + 256 + CHAR_SP, y}, vm->kcycles - vm->cycles, COLOR_WHITE, data);
+	y += CHAR_SY + CHAR_VSP;
 	return (y);
 }
 
@@ -250,11 +305,10 @@ static void	generate_toolbar(struct s_vdata *data, struct s_vm *vm)
 {
 	int		y;
 
-	y = 0;
-	y += draw_ply_scores(data, vm);
+	y = draw_ply_scores(data, vm);
 //	y += draw_live_loader(data, vm, y);
 //	y += draw_live_process(data, vm, y);
-//	y += draw_kill_time(data, vm, y);
+	y = draw_kill_time(data, vm, y);
 //	y += draw_cycle_kill(data, vm, y);
 }
 

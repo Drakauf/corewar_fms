@@ -6,7 +6,7 @@
 /*   By: shthevak <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/22 14:41:31 by shthevak     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/27 13:59:52 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/29 14:02:27 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -38,13 +38,11 @@ void		destroy_vdata(struct s_vdata *data)
 	free(data);
 }
 
-void		destroy_vm(void)
+void		destroy(struct s_vm *vm)
 {
-	struct s_vm		*vm;
 	struct s_proc	*pnext;
 	int				i;
 
-	vm = *get_vmp();
 	free(vm->arena);
 	free(vm->ainfo);
 	if (vm->data)
@@ -62,4 +60,14 @@ void		destroy_vm(void)
 		free(vm->headers[i].comment);
 		i++;
 	}
+}
+
+void		destroy_vm(void)
+{
+	struct s_vm		*vm;
+
+	vm = *get_vmp();
+	if (!vm)
+		return ;
+	destroy(vm);
 }

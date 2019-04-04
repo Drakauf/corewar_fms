@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:40:35 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 15:54:31 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/29 13:43:53 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -30,7 +30,6 @@ struct s_proc	*fresh_process(int pn, int pc, struct s_vm *vm)
 void			fork_process(struct s_vm *vm, struct s_proc *proc, int param)
 {
 	struct s_proc	*pnew;
-	struct s_proc	*tmp;
 
 	if (!(pnew = (struct s_proc *)malloc(sizeof(struct s_proc))))
 		exit((ft_printf("\e[31;1mError\e[0m: %s\n", strerror(ENOMEM)) & 1) | 1);

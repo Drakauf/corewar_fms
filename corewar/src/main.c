@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 12:07:03 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 16:40:18 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/29 14:02:56 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -38,4 +38,7 @@ int		main(int argc, char **argv)
 	ft_memset(vm.ainfo, '\0', MEM_SIZE);
 	vm.players = get_champ_num(&vm);
 	launch_corewar(&vm);
+	destroy(&vm);
+	get_vmp()[0] = NULL;
+	return (0);
 }
