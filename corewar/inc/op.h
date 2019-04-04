@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 11:17:29 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/04 13:44:49 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/04 17:09:35 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -165,6 +165,7 @@ struct	s_vm
 	int				dcycles;
 	int				kcycles;
 	int				tcycles;
+	int				zcycles;
 	int				lives;
 	int				llives[MAX_PLAYERS];
 	int				next_pnum;
@@ -187,7 +188,8 @@ void	load_champs(struct s_vm *vm);
 struct s_proc	*fresh_process(struct s_vm *vm, int pn, int pc);
 */
 void	cw_init_window(struct s_vdata *data);
-void	cw_update_window(struct s_vm *vm, int last_frame);
+void	cw_update_window(struct s_vm *vm, struct s_vdata *data,
+		int last_frame);
 struct s_vm **get_vmp(void);
 
 
@@ -276,5 +278,10 @@ void				kill_process(struct s_proc **proc, struct s_vm *vm,\
 					struct s_proc *last);
 void				fork_process(struct s_vm *vm, struct s_proc *proc, int param);
 struct s_proc		*fresh_process(int pn, int pc, struct s_vm *vm);
+
+void	draw_line(struct s_pos s, struct s_pos e, int col, struct s_vdata *data);
+int		draw_char(unsigned char c, struct s_pos p, int co, struct s_vdata *data);
+int		draw_str(char *str, struct s_pos p, int color, struct s_vdata *data);
+int		draw_score(struct s_pos p, int value, int color, struct s_vdata *data);
 
 #endif

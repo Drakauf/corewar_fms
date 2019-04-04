@@ -6,7 +6,7 @@
 /*   By: shthevak <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/22 15:59:24 by shthevak     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/04 14:28:46 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/04 17:09:55 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,6 +18,7 @@ void	init_params(struct s_vm *vm)
 	vm->cycles = 0;
 	vm->kcycles = CYCLE_TO_DIE;
 	vm->tcycles = 0;
+	vm->zcycles = CYCLE_TO_DIE;
 	vm->lives = 0;
 	vm->checks = 0;
 	vm->mchecks = 10;
@@ -47,7 +48,7 @@ void	disp_results(struct s_vm *vm)
 		vm->headers[idx_max].prog_name);
 	if (vm->flags & F_GRAPH)
 	{
-		cw_update_window(vm, idx_max + 1);
+		cw_update_window(vm, vm->data, idx_max + 1);
 		SDL_WaitEvent(&(vm->data->ev));
 		while (vm->data->ev.type != SDL_QUIT &&
 			vm->data->ev.type != SDL_KEYDOWN)
@@ -64,7 +65,7 @@ void	launch_corewar(struct s_vm *vm)
 	if (vm->flags & F_GRAPH)
 	{
 		vm->flags &= ~F_DUMP;
-		cw_update_window(vm, 0);
+		cw_update_window(vm, vm->data, 0);
 		sleep(4);
 	}
 	go_corewar(vm);

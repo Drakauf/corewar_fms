@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 15:54:02 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/04 14:30:16 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/04 17:09:19 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -52,6 +52,7 @@ void	check_lives(struct s_vm *vm)
 			ft_printf("Cycle to die is now %d\n", vm->kcycles);
 		vm->checks = 0;
 	}
+	vm->zcycles = vm->tcycles + vm->kcycles;
 }
 
 void	dump_memory(struct s_vm *vm)
@@ -95,7 +96,7 @@ void	update_info(struct s_vm *vm)
 	}
 	if ((vm->flags & F_GRAPH) && vm->tcycles % vm->data->gcycles == 0)
 	{
-		cw_update_window(vm, 0);
+		cw_update_window(vm, vm->data, 0);
 		usleep(1000000 / vm->data->frate);
 	}
 }
