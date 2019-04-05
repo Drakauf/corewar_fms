@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 13:45:44 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/04 17:09:17 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/05 13:49:57 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -215,8 +215,13 @@ static int	draw_kill_time(struct s_vdata *data, struct s_vm *vm, int y)
 {
 	int			x;
 
-	draw_str("Next kill operation:", (struct s_pos){data->tbx, y}, COLOR_WHITE,
+	x = draw_str("Next kill operation: ", (struct s_pos){data->tbx, y},
+		COLOR_WHITE, data);
+	x += draw_str("(Cycle To Die ", (struct s_pos){data->tbx + x, y},
+		COLOR_LNONE, data);
+	x += draw_score((struct s_pos){data->tbx + x, y}, vm->kcycles, COLOR_LNONE,
 		data);
+	draw_char(')', (struct s_pos){data->tbx + x, y}, COLOR_LNONE, data);
 	y += 18;
 	x = 0;
 	while (x < 256)
@@ -307,7 +312,7 @@ void	generate_toolbar(struct s_vdata *data, struct s_vm *vm,
 {
 	int		y;
 
-	draw_str("Corewar - version 2.7", (struct s_pos){data->tbx, 10},
+	draw_str("Corewar - version 2.8", (struct s_pos){data->tbx, 10},
 		COLOR_WHITE, data);
 	y = draw_ply_scores(data, vm, 46);
 	y = draw_kill_time(data, vm, y);

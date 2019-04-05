@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:13:43 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 11:25:35 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/05 11:35:15 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -53,11 +53,11 @@ int		get_champ_num(struct s_vm *vm)
 	int i;
 
 	i = 0;
-	while (i < MAX_PLAYERS - 1)
+	while (i < MAX_PLAYERS)
 	{
 		if (!vm->champs[i])
 		{
-			if (vm->champs[i + 1])
+			if (i < MAX_PLAYERS - 1 && vm->champs[i + 1])
 			{
 				ft_printf("\e[31;1mError\e[0m: missing champ n.%d\n", i);
 				exit(1);
