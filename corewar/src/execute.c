@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 13:33:50 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 16:29:19 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/06 10:27:52 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -143,13 +143,13 @@ int		live(struct s_vm *vm, struct s_proc *p)
 	if (vm->verbose & VOPERS)
 		ft_printf("P%5d | live %d\n", p->pnum, p->last_p1);
 	p->lives = vm->tcycles;
+	vm->lives += 1;
 	if (p->last_p1 < -vm->players || p->last_p1 >= 0)
 	{
 		set_pc(p, vm, 5);
 		return (p->carry);
 	}
 	vm->llives[-1 - p->last_p1] = vm->tcycles;
-	vm->lives += 1;
 	if (vm->verbose & VLIVES)
 		ft_printf("Player %d (%s) is said to be alive\n", -p->last_p1,
 			vm->headers[-1 - p->last_p1].prog_name);
@@ -337,10 +337,9 @@ int		xor(struct s_vm *vm, struct s_proc *p)
 
 int		zjmp(struct s_vm *vm, struct s_proc *p)
 {
-	p->last_p1 %= IDX_MOD;
 	if (p->carry)
 	{
-		p->pcount = (p->pcount + p->last_p1) % MEM_SIZE;
+		p->pcount = (p->pcount + (p->last_p1 % IDX_MOD)) % MEM_SIZE;
 		if (p->pcount < 0)
 			p->pcount += MEM_SIZE;
 		if (vm->verbose & VOPERS)
@@ -348,9 +347,9 @@ int		zjmp(struct s_vm *vm, struct s_proc *p)
 	}
 	else
 	{
-		p->pcount = (p->pcount + 3) % MEM_SIZE;
 		if (vm->verbose & VOPERS)
 			ft_printf("P%5d | zjmp %d FAILED\n", p->pnum, p->last_p1);
+		set_pc(p, vm, 3);
 	}
 	return (p->carry);
 }
@@ -382,7 +381,7 @@ int		ldi(struct s_vm *vm, struct s_proc *p)
 	if (vm->verbose & VOPERS)
 	{
 		ft_printf("P%5d | ldi %d %d r%d\n", p->pnum,
-			p->last_p1, p->last_p2, p->last_p3);
+			index, idxsum, p->last_p3);
 		ft_printf("       | -> load from %d + %d = %d (with pc and mod %d)\n",
 			index, idxsum, index + idxsum,
 			(p->pcount + (index + idxsum) % IDX_MOD + MEM_SIZE) % MEM_SIZE);
@@ -420,10 +419,10 @@ int		sti(struct s_vm *vm, struct s_proc *p)
 	if (vm->verbose & VOPERS)
 	{
 		ft_printf("P%5d | sti r%d %d %d\n", p->pnum,
-			p->last_p1, p->last_p2, p->last_p3);
+			p->last_p1, index, idxsum);
 		ft_printf("       | -> store to %d + %d = %d (with pc and mod %d)\n",
 			index, idxsum, index + idxsum,
-			(p->pcount + (index + idxsum) % IDX_MOD + MEM_SIZE) % MEM_SIZE);
+			p->pcount + (index + idxsum) % IDX_MOD);
 	}
 	index += idxsum;
 	set_int(vm, p->pcount + (index % IDX_MOD), p->number, p->regs[p->last_p1 - 1]);
@@ -433,12 +432,11 @@ int		sti(struct s_vm *vm, struct s_proc *p)
 
 int		cfork(struct s_vm *vm, struct s_proc *p)
 {
-	p->last_p1 %= IDX_MOD;
-	fork_process(vm, p, p->last_p1);
+	fork_process(vm, p, (p->last_p1 % IDX_MOD));
 	if (vm->verbose & VOPERS)
 	{
 		ft_printf("P%5d | fork %d (%d)\n", p->pnum, p->last_p1,
-			(p->pcount + p->last_p1 + MEM_SIZE) % MEM_SIZE);
+			p->pcount + (p->last_p1 % IDX_MOD) % MEM_SIZE);
 	}
 	set_pc(p, vm, 3);
 	return (p->carry);
@@ -489,7 +487,7 @@ int		lldi(struct s_vm *vm, struct s_proc *p)
 	if (vm->verbose & VOPERS)
 	{
 		ft_printf("P%5d | ldi %d %d r%d\n", p->pnum,
-			p->last_p1, p->last_p2, p->last_p3);
+			index, idxsum, p->last_p3);
 		ft_printf("       | -> long load from %d + %d = %d (with pc and mod %d)\n",
 			index, idxsum, index + idxsum,
 			(p->pcount + index + idxsum + MEM_SIZE) % MEM_SIZE);
@@ -506,7 +504,7 @@ int		lfork(struct s_vm *vm, struct s_proc *p)
 	if (vm->verbose & VOPERS)
 	{
 		ft_printf("P%5d | lfork %d (%d)\n", p->pnum, p->last_p1,
-			(p->pcount + p->last_p1 + MEM_SIZE) % MEM_SIZE);
+			p->pcount + p->last_p1);
 	}
 	set_pc(p, vm, 3);
 	return (p->carry);

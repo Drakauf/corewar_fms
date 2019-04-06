@@ -6,7 +6,7 @@
 /*   By: shthevak <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/22 15:59:24 by shthevak     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/04 17:09:55 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/06 09:55:51 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -35,16 +35,16 @@ void	disp_results(struct s_vm *vm)
 	int		max;
 	int		idx_max;
 
-	i = 0;
+	i = vm->players - 1;
 	max = -1;
 	idx_max = -1;
-	while (i < vm->players)
+	while (i >= 0)
 	{
 		idx_max = (vm->llives[i] > max) ? i : idx_max;
 		max = (vm->llives[i] > max) ? vm->llives[i] : max;
-		i++;
+		i--;
 	}
-	ft_printf("Contestant %d, \"%s\", has won!\n", idx_max + 1,
+	ft_printf("Contestant %d, \"%s\", has won !\n", idx_max + 1,
 		vm->headers[idx_max].prog_name);
 	if (vm->flags & F_GRAPH)
 	{

@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 09:40:35 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/29 13:43:53 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/06 09:37:24 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -22,7 +22,7 @@ struct s_proc	*fresh_process(int pn, int pc, struct s_vm *vm)
 	ft_memset(p, '\0', sizeof(struct s_proc));
 	p->regs[0] = -(pn + 1);
 	p->pcount = pc;
-	p->pnum = vm->next_pnum++;
+	p->pnum = vm->players + 1 - (vm->next_pnum++);
 	p->number = pn + 1;
 	return (p);
 }
