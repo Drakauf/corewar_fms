@@ -14,18 +14,23 @@ cp ../asm/asm ./
 cp ../orig/asm ./o_asm
 cp ../orig/corewar ./o_corewar
 
-for FILE in $FILES
+FILES=$(find -f ../cores/ | grep '\.cor')
+
+for FILE_1 in $FILES
 do
-	echo -e "\033[33;1m$FILE\033[0m"
-	tail -n 1 $FILE
-	./asm $FILE -o test.cor
-	if [ -f test.cor ]
-	then
-		./o_asm $FILE
-		diff --text ${FILE/.s/.cor} test.cor | sed 's/^</[31;1m</;s/^>/[32;1m>/;s/$/[0m/'
-		rm -f ${FILE/.s/.cor}
-	fi
-	rm -f test.cor
+	for FILE_2 in $FILES
+	do
+		echo -n "$FILE_1 - $FILE_2 : "
+		./corewar -v 31 -dump 25000 $FILE_1 $FILE_2 > result.log
+		./o_corewar -v 31 -d 25000 $FILE_1 $FILE_2 > o_result.log
+		diff result.log o_result.log 2>&1 > /dev/null
+		if [ $? -eq 1 ]
+		then
+			echo -e "\033[31;1mFailure\033[0m"
+		else
+			echo -e "\033[32;1mSuccess\033[0m"
+		fi
+	done
 done
 
 rm -f corewar
