@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/07 11:52:07 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/07 12:30:41 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/07 12:39:07 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -84,38 +84,33 @@ void		generate_arena(struct s_vdata *data, struct s_vm *vm)
 		p.y += 18;
 	}
 }
-/*
-void		generate_processes(struct s_vdata *data, struct s_proc *proc)
+
+void		generate_processes(struct s_vdata *data, struct s_proc *proc,
+		int x, int y)
 {
-	struct s_pos	start;
-	int				w;
-	int				color;
+	register int	w;
+	register int	color;
 
 	while (proc)
 	{
-		start.x = 6 + (proc->pcount % 64) * 28;
-		start.y = 6 + (proc->pcount / 64) * 18;
-		if (data->px[start.x + start.y * data->sx])
-		{
-			proc = proc->next;
+		x = 6 + (proc->pcount % 64) * 28;
+		y = 6 + (proc->pcount / 64) * 18;
+		data->px[x + y * data->sx] ? proc = proc->next : 0;
+		if (data->px[x + y * data->sx])
 			continue;
-		}
 		color = g_color[proc->number + MAX_PLAYERS + 1];
-		w = start.y;
-		while (w < start.y + 17)
+		w = y - 1;
+		while (++w < y + 17)
 		{
-			data->px[start.x + w * data->sx] = color;
-			data->px[start.x + 27 + w * data->sx] = color;
-			w++;
+			data->px[x + w * data->sx] = color;
+			data->px[x + 27 + w * data->sx] = color;
 		}
-		w = start.x;
-		while (w < start.x + 28)
+		w = x - 1;
+		while (++w < x + 28)
 		{
-			data->px[w + start.y * data->sx] = color;
-			data->px[w + (start.y + 17) * data->sx] = color;
-			w++;
+			data->px[w + y * data->sx] = color;
+			data->px[w + (y + 17) * data->sx] = color;
 		}
 		proc = proc->next;
 	}
 }
-*/

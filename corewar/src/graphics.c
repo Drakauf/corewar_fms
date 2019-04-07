@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 13:45:44 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/07 12:14:45 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/07 13:18:52 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,116 +42,6 @@ void		cw_init_window(struct s_vdata *data)
 	SDL_RenderPresent(data->rd);
 }
 
-static void	generate_processes(struct s_vdata *data, struct s_proc *proc)
-{
-	struct s_pos	start;
-	struct s_pos	i;
-	int				color;
-
-	while (proc)
-	{
-		color = g_color[proc->number + MAX_PLAYERS + 1];
-		start.x = 6 + (proc->pcount % 64) * 28;
-		start.y = 6 + (proc->pcount / 64) * 18;
-		i.y = start.y;
-		while (i.y < start.y + 17)
-		{
-			data->px[start.x + i.y * data->sx] = color;
-			data->px[start.x + 27 + i.y * data->sx] = color;
-			i.y++;
-		}
-		i.x = start.x;
-		while (i.x < start.x + 28)
-		{
-			data->px[i.x + start.y * data->sx] = color;
-			data->px[i.x + (start.y + 17) * data->sx] = color;
-			i.x++;
-		}
-		proc = proc->next;
-	}
-}
-
-static void	draw_ply_name(struct s_vdata *data, struct s_vm *vm, int ply, int y)
-{
-	int		i;
-	int		x;
-	int		j;
-
-	i = 0;
-	x = data->tbx;
-	while (vm->headers[ply].prog_name[i])
-	{
-		x += draw_char(vm->headers[ply].prog_name[i], (struct s_pos){x, y},
-			g_color[ply + 1], data);
-		i++;
-	}
-	x += 4;
-	x += draw_char('(', (struct s_pos){x, y}, g_color[ply + 1], data);
-	j = 0;
-	while (vm->headers[ply].comment[j] && i + j < 80)
-	{
-		x += draw_char(vm->headers[ply].comment[j], (struct s_pos){x, y},
-			g_color[ply + 1], data);
-		j++;
-	}
-	x += draw_char(')', (struct s_pos){x, y}, g_color[ply + 1], data);
-}
-
-static int	draw_ply_scores(struct s_vdata *data, struct s_vm *vm, int y)
-{
-	int		player;
-	int		x;
-
-	player = 0;
-	while (player < vm->players)
-	{
-		draw_ply_name(data, vm, player, y);
-		y += 18;
-		x = 0;
-		while (x < 300)
-		{
-			draw_line((struct s_pos){x + data->tbx, y},
-				(struct s_pos){x + data->tbx, y + 10 - 1},
-				(vm->llives[player] > vm->tcycles * x / 300) ?
-				g_color[player + 1] : COLOR_NONE, data);
-			x++;
-		}
-		draw_score((struct s_pos){data->tbx + 312, y}, vm->llives[player],
-			g_color[player + 2 + MAX_PLAYERS], data);
-		y += 18;
-		player++;
-	}
-	return (y + 20);
-}
-
-static int	draw_kill_time(struct s_vdata *data, struct s_vm *vm, int y)
-{
-	int			x;
-
-	x = draw_str("Next kill operation: ", (struct s_pos){data->tbx, y},
-		COLOR_WHITE, data);
-	x += draw_str("(Cycle To Die ", (struct s_pos){data->tbx + x, y},
-		COLOR_LNONE, data);
-	x += draw_score((struct s_pos){data->tbx + x, y}, vm->kcycles, COLOR_LNONE,
-		data);
-	draw_char(')', (struct s_pos){data->tbx + x, y}, COLOR_LNONE, data);
-	y += 18;
-	x = 0;
-	while (x < 256)
-	{
-		draw_line((struct s_pos){x + data->tbx, y},
-			(struct s_pos){x + data->tbx, y + 9},
-			(vm->cycles * 256 / vm->kcycles > x) ? (16776960 - x * 65536) :
-			COLOR_NONE, data);
-		x++;
-	}
-	x = data->tbx + 268 + draw_score((struct s_pos){data->tbx + 268, y},
-		vm->kcycles - vm->cycles, COLOR_WHITE, data);
-	draw_str(" cycles", (struct s_pos){x, y}, COLOR_WHITE, data);
-	y += 26;
-	return (y);
-}
-
 static int	living_count(struct s_proc *p, int pnum, struct s_vm *vm)
 {
 	int		i;
@@ -178,7 +68,7 @@ static int	process_count(struct s_proc *p, int pnum)
 	return (i);
 }
 
-static int	draw_process_count(struct s_vdata *data, struct s_vm *vm, int y)
+int			draw_process_count(struct s_vdata *data, struct s_vm *vm, int y)
 {
 	int				pl;
 	int				c;
@@ -207,33 +97,6 @@ static int	draw_process_count(struct s_vdata *data, struct s_vm *vm, int y)
 	return (y);
 }
 
-static void	display_winner(struct s_vdata *data, struct s_vm *vm, int y,
-		int winner)
-{
-	int			x;
-
-	x = draw_str("Winner: ", (struct s_pos){data->tbx, y}, COLOR_WHITE, data);
-	draw_str(vm->headers[winner - 1].prog_name,
-		(struct s_pos){x + data->tbx, y}, g_color[winner], data);
-	y += 36;
-	draw_str("Press any touch to continue...", (struct s_pos){data->tbx, y},
-		COLOR_LNONE, data);
-}
-
-void	generate_toolbar(struct s_vdata *data, struct s_vm *vm,
-		int last_frame)
-{
-	int		y;
-
-	draw_str("Corewar - version 2.8", (struct s_pos){data->tbx, 10},
-		COLOR_WHITE, data);
-	y = draw_ply_scores(data, vm, 46);
-	y = draw_kill_time(data, vm, y);
-	y = draw_process_count(data, vm, y);
-	if (last_frame)
-		display_winner(data, vm, y, last_frame);
-}
-
 void		cw_update_window(struct s_vm *vm, struct s_vdata *data,
 		int last_frame)
 {
@@ -257,7 +120,7 @@ void		cw_update_window(struct s_vm *vm, struct s_vdata *data,
 	ft_memset(data->px, '\0', data->sy * data->pitch);
 	generate_borders(data);
 	generate_arena(data, vm);
-	generate_processes(data, vm->processes);
+	generate_processes(data, vm->processes, 0, 0);
 	generate_toolbar(data, vm, last_frame);
 	SDL_UnlockTexture(data->tx);
 	SDL_RenderCopy(data->rd, data->tx, NULL, NULL);
