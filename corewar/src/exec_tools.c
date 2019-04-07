@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/07 13:23:12 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/07 14:20:36 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/07 14:52:59 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -19,7 +19,7 @@ void	set_pc(struct s_proc *p, struct s_vm *vm, int x)
 
 	if (vm->verbose & VPCMOV)
 	{
-		ft_printf("ADV %d (0x%.4x 0x%.4x) ", x, (unsigned int)p->pcount,
+		ft_printf("ADV %d (0x%.4x -> 0x%.4x) ", x, (unsigned int)p->pcount,
 				(unsigned int)(p->pcount + x));
 		i = 0;
 		while (i < x)

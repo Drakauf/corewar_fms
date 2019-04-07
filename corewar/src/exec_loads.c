@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/07 13:54:18 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/07 14:33:16 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/07 16:45:57 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -21,13 +21,14 @@ int		ld(struct s_vm *vm, struct s_proc *p)
 		set_pc(p, vm, param_size(p->last_op & 240U, p));
 		return (p->carry);
 	}
-	if (vm->verbose & VOPERS)
-		ft_printf("P%5d | ld %d r%d\n", p->pnum, p->last_p1, p->last_p2);
 	if (fparam(p->last_op) == 2)
 		p->regs[p->last_p2 - 1] = p->last_p1;
 	else
 		p->regs[p->last_p2 - 1] = get_int(vm->arena, p->pcount,
 				p->last_p1 % IDX_MOD);
+	if (vm->verbose & VOPERS)
+		ft_printf("P%5d | ld %d r%d\n", p->pnum, p->regs[p->last_p2 - 1],
+				p->last_p2);
 	set_pc(p, vm, param_size(p->last_op & 240U, p));
 	return (p->regs[p->last_p2 - 1] == 0);
 }
@@ -43,9 +44,11 @@ int		lld(struct s_vm *vm, struct s_proc *p)
 	if (fparam(p->last_op) == 2)
 		p->regs[p->last_p2 - 1] = p->last_p1;
 	else
-		p->regs[p->last_p2 - 1] = get_int(vm->arena, p->pcount, p->last_p1);
+		p->regs[p->last_p2 - 1] =
+			(short)get_int(vm->arena, p->pcount, p->last_p1);
 	if (vm->verbose & VOPERS)
-		ft_printf("P%5d | lld %d r%d\n", p->pnum, p->last_p1, p->last_p2);
+		ft_printf("P%5d | lld %d r%d\n", p->pnum, p->regs[p->last_p2 - 1],
+				p->last_p2);
 	set_pc(p, vm, param_size(p->last_op & 240U, p));
 	return (p->regs[p->last_p2 - 1] == 0);
 }
@@ -75,7 +78,7 @@ int		ldi(struct s_vm *vm, struct s_proc *p)
 	index += idxsum;
 	p->regs[p->last_p3 - 1] = get_int(vm->arena, p->pcount, index % IDX_MOD);
 	set_pc(p, vm, param_size(p->last_op, p));
-	return (p->regs[p->last_p3 - 1] == 0);
+	return (p->carry);
 }
 
 int		lldi(struct s_vm *vm, struct s_proc *p)

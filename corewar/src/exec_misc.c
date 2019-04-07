@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/07 14:03:57 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/07 14:32:40 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/07 16:30:07 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -38,16 +38,14 @@ int		aff(struct s_vm *vm, struct s_proc *p)
 
 	if (fparam(p->last_op) != 1 || invalid_reg(p->last_p1))
 	{
-		set_pc(p, vm, 2);
+		set_pc(p, vm, param_size(p->last_op & 192U, p));
 		return (p->carry);
 	}
 	c = (char)p->regs[p->last_p1 - 1];
-	if (vm->verbose & VOPERS)
-		ft_printf("Aff: %c\n", c);
-	if (!(vm->flags & F_GRAPH))
+	if (!vm->verbose && !(vm->flags & F_GRAPH))
 		write(1, &c, 1);
 	set_pc(p, vm, 3);
-	return (c == 0);
+	return (p->carry);
 }
 
 void	disp_sti(struct s_proc *p, int index, int idxsum)
@@ -72,7 +70,7 @@ void	disp_lldi(struct s_proc *p, int index, int idxsum)
 {
 	ft_printf("P%5d | lldi %d %d r%d\n", p->pnum,
 			index, idxsum, p->last_p3);
-	ft_printf("       | -> long load from %d + %d = %d (with pc and mod %d)\n",
+	ft_printf("       | -> load from %d + %d = %d (with pc %d)\n",
 			index, idxsum, index + idxsum,
 			p->pcount + index + idxsum);
 }

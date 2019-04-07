@@ -6,3 +6,4 @@ corewar/corewar
 asm/asm
 output
 routput
+unit-test/test.sh

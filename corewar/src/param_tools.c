@@ -6,7 +6,7 @@
 /*   By: shthevak <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/27 11:34:31 by shthevak     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/27 11:48:36 by shthevak    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/07 14:58:57 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -21,16 +21,15 @@ int		param_size(unsigned char op, struct s_proc *p)
 	if (fparam(op) <= 1)
 		s += fparam(op);
 	else
-		s += (fparam(op) == 2 && p->last_it != 10 && p->last_it != 14) ? 4 : 2;
+		s += (fparam(op) == 2 && !i_inst(p->last_it)) ? 4 : 2;
 	if (sparam(op) <= 1)
 		s += sparam(op);
 	else
-		s += (sparam(op) == 2 && p->last_it != 10 &&
-				p->last_it != 11 && p->last_it != 14) ? 4 : 2;
+		s += (sparam(op) == 2 && !i_inst(p->last_it)) ? 4 : 2;
 	if (tparam(op) <= 1)
 		s += tparam(op);
 	else
-		s += (tparam(op) == 2 && p->last_it != 11) ? 4 : 2;
+		s += (tparam(op) == 2 && !i_inst(p->last_it)) ? 4 : 2;
 	return (s);
 }
 

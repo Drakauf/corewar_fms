@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/07 14:00:26 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/07 14:33:02 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/07 16:10:42 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,7 +16,7 @@
 int		st(struct s_vm *vm, struct s_proc *p)
 {
 	if (fparam(p->last_op) != 1 || !(sparam(p->last_op) & 1) ||
-		tparam(p->last_op) != 0 || invalid_reg(p->last_p1) ||
+		invalid_reg(p->last_p1) ||
 		(sparam(p->last_op) == 1 && invalid_reg(p->last_p2)))
 	{
 		set_pc(p, vm, param_size(p->last_op & 240U, p));
@@ -25,8 +25,7 @@ int		st(struct s_vm *vm, struct s_proc *p)
 	if (vm->verbose & VOPERS)
 		ft_printf("P%5d | st r%d %d\n", p->pnum, p->last_p1, p->last_p2);
 	if (sparam(p->last_op) == 1)
-		set_int(vm, p->pcount + (p->regs[p->last_p2 - 1] % IDX_MOD), p->number,
-			p->regs[p->last_p1 - 1]);
+		p->regs[p->last_p2 - 1] = p->regs[p->last_p1 - 1];
 	else
 		set_int(vm, p->pcount + (p->last_p2 % IDX_MOD), p->number,
 			p->regs[p->last_p1 - 1]);

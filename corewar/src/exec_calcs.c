@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/07 13:58:47 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/07 13:59:24 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/07 15:39:24 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -42,7 +42,7 @@ int		sub(struct s_vm *vm, struct s_proc *p)
 	if (vm->verbose & VOPERS)
 		ft_printf("P%5d | sub r%d r%d r%d\n", p->pnum, p->last_p1, p->last_p2,
 			p->last_p3);
-	p->regs[p->last_p3 - 1] = p->regs[p->last_p2 - 1] - p->regs[p->last_p1 - 1];
+	p->regs[p->last_p3 - 1] = p->regs[p->last_p1 - 1] - p->regs[p->last_p2 - 1];
 	set_pc(p, vm, 5);
 	return (p->regs[p->last_p3 - 1] == 0);
 }

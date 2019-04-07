@@ -1,7 +1,9 @@
 .name "titi"
 .comment "Je suis un petit oiseau"
 
-	sti r1, %:live_01, %1
+	ld %4, r12
+	st r1, r12
+	st r12, 508
 	sti r1, %:start, %6
 start:
 	xor r15, r15, r15
