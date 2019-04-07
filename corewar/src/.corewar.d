@@ -14,4 +14,4 @@ obj/corewar.o: src/corewar.c inc/op.h inc/SDL2/SDL.h inc/SDL2/SDL_main.h \
   inc/SDL2/SDL_log.h inc/SDL2/SDL_messagebox.h inc/SDL2/SDL_power.h \
   inc/SDL2/SDL_render.h inc/SDL2/SDL_sensor.h inc/SDL2/SDL_shape.h \
   inc/SDL2/SDL_system.h inc/SDL2/SDL_timer.h inc/SDL2/SDL_version.h \
-  libft/libft.h
+  libft/libft.h inc/defines.h inc/typedefs.h

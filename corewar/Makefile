@@ -6,7 +6,7 @@
 #    By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2019/02/25 16:43:57 by mhouppin     #+#   ##    ##    #+#        #
-#    Updated: 2019/04/07 12:21:10 by mhouppin    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/04/07 14:47:16 by mhouppin    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -23,10 +23,37 @@ else
 endif
 LIB      := libft
 ARCHIVE  := $(LIB)/libft.a
-SOURCES  := $(wildcard ${SRC_DIR}/*.c)
+
+SOURCES  := \
+	src/champ_intro.c\
+	src/corewar.c\
+	src/exec_calcs.c\
+	src/exec_checks.c\
+	src/exec_cooldowns.c\
+	src/exec_jumps.c\
+	src/exec_loads.c\
+	src/exec_misc.c\
+	src/exec_tools.c\
+	src/execute.c\
+	src/font.c\
+	src/graph_arena.c\
+	src/graph_toolbar.c\
+	src/graph_tools.c\
+	src/graphics.c\
+	src/launch_corewar.c\
+	src/load_champs.c\
+	src/load_tools.c\
+	src/main.c\
+	src/param_get.c\
+	src/param_tools.c\
+	src/parsing.c\
+	src/process.c\
+	src/struct.c\
+	src/tools.c
+
 OBJECTS  := $(patsubst ${SRC_DIR}/%.c,${OBJ_DIR}/%.o,${SOURCES})
 DEPENDS  := $(patsubst ${SRC_DIR}/%.c,${SRC_DIR}/.%.d,${SOURCES})
-CFLAGS   := -Wall -Wextra -Oz
+CFLAGS   := -Wall -Wextra -Werror -O3
 CINC     := -I $(subst :, -I ,${INC_DIR})
 CC       := gcc
 INCLUDED := $(shell for deps in ${DEPENDS}; do if [[ -e $$deps ]]; then echo -n "$$deps "; fi; done)
