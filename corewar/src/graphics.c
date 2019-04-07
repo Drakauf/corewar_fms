@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 13:45:44 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/05 13:49:57 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/07 12:14:45 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,35 +18,6 @@ const int	g_color[2 * MAX_PLAYERS + 2] = {
 	COLOR_NONE, COLOR_ORANGE, COLOR_GREEN, COLOR_CYAN, COLOR_RED,
 	COLOR_LNONE, COLOR_LORANGE, COLOR_LGREEN, COLOR_LCYAN, COLOR_LRED
 };
-
-static void	generate_borders(struct s_vdata *data)
-{
-	const int	color = COLOR_BORDER;
-	int			x;
-	int			y;
-
-	x = -1;
-	while (++x < 6)
-	{
-		y = -1;
-		while (++y < data->sy)
-		{
-			data->px[x + y * data->sx] = color;
-			data->px[(data->tbx - x - 7) + y * data->sx] = color;
-			data->px[(data->sx - x - 1) + y * data->sx] = color;
-		}
-	}
-	x = -1;
-	while (++x < data->sx)
-	{
-		y = -1;
-		while (++y < 6)
-		{
-			data->px[x + y * data->sx] = color;
-			data->px[x + (data->sy - y - 1) * data->sx] = color;
-		}
-	}
-}
 
 void		cw_init_window(struct s_vdata *data)
 {
@@ -69,64 +40,6 @@ void		cw_init_window(struct s_vdata *data)
 	SDL_UnlockTexture(data->tx);
 	SDL_RenderCopy(data->rd, data->tx, NULL, NULL);
 	SDL_RenderPresent(data->rd);
-}
-
-unsigned char	to_hex(unsigned char c)
-{
-	if (c < 10)
-		return (c + '0');
-	else
-		return (c + 'A' - 0xA);
-}
-
-static void	draw_afont(struct s_vdata *data, struct s_vm *vm,
-		struct s_pos p, struct s_pos i)
-{
-	struct s_pos	px;
-	unsigned char	left;
-	unsigned char	right;
-	unsigned char	info;
-
-	if ((info = ((char *)(vm->ainfo))[i.x + i.y * 64]) >= MAX_PLAYERS + 1)
-	{
-		((unsigned char *)(vm->ainfo))[i.x + i.y * 64] -= (MAX_PLAYERS + 1);
-		info = (info % (MAX_PLAYERS + 1)) + MAX_PLAYERS + 1;
-	}
-	left = ((unsigned char *)(vm->arena))[i.x + i.y * 64];
-	right = to_hex(left & 15);
-	left = to_hex(left >> 4);
-	px.y = -1;
-	while (++(px.y) < 10)
-	{
-		px.x = -1;
-		while (++(px.x) < 8)
-		{
-			data->px[p.x + px.x + (p.y + px.y) * data->sx] =
-				data->font[left][px.x + px.y * 8] * g_color[(int)(info & 15)];
-			data->px[p.x + px.x + 10 + (p.y + px.y) * data->sx] =
-				data->font[right][px.x + px.y * 8] * g_color[(int)(info & 15)];
-		}
-	}
-}
-
-static void	generate_arena(struct s_vdata *data, struct s_vm *vm)
-{
-	struct s_pos	i;
-	struct s_pos	p;
-
-	i.y = 0;
-	while (i.y < 64)
-	{
-		p.y = 10 + i.y * 18;
-		i.x = 0;
-		while (i.x < 64)
-		{
-			p.x = 11 + i.x * 28;
-			draw_afont(data, vm, p, i);
-			i.x++;
-		}
-		i.y++;
-	}
 }
 
 static void	generate_processes(struct s_vdata *data, struct s_proc *proc)

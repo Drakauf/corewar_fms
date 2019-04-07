@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/18 11:17:29 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/04 17:09:35 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/07 12:16:43 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -178,6 +178,9 @@ struct	s_vm
 };
 
 typedef int		(*t_exec)(struct s_vm *, struct s_proc *);
+
+extern const int g_color[2 * MAX_PLAYERS + 2];
+
 /*
 int		get_champ_num(struct s_vm *vm);
 
@@ -283,5 +286,8 @@ void	draw_line(struct s_pos s, struct s_pos e, int col, struct s_vdata *data);
 int		draw_char(unsigned char c, struct s_pos p, int co, struct s_vdata *data);
 int		draw_str(char *str, struct s_pos p, int color, struct s_vdata *data);
 int		draw_score(struct s_pos p, int value, int color, struct s_vdata *data);
+
+void		generate_borders(struct s_vdata *data);
+inline void	generate_arena(struct s_vdata *data, struct s_vm *vm);
 
 #endif

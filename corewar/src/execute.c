@@ -6,7 +6,7 @@
 /*   By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/19 13:33:50 by mhouppin     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/06 10:27:52 by mhouppin    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/07 11:48:43 by mhouppin    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -36,6 +36,15 @@ void	set_pc(struct s_proc *p, struct s_vm *vm, int x)
 int		invalid_reg(int regnum)
 {
 	return (regnum < 1 || regnum > REG_NUMBER);
+}
+
+int		bitset_fail(struct s_proc *p)
+{
+	return (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
+		tparam(p->last_op) != 1 ||
+		(fparam(p->last_op) == 1 && invalid_reg(p->last_p1)) ||
+		(sparam(p->last_op) == 1 && invalid_reg(p->last_p2)) ||
+		invalid_reg(p->last_p3));
 }
 
 int		i_inst(int c)
@@ -235,11 +244,7 @@ int		and(struct s_vm *vm, struct s_proc *p)
 	t_reg	result;
 	t_reg	bitset;
 
-	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
-		tparam(p->last_op) != 1 ||
-		(fparam(p->last_op) == 1 && invalid_reg(p->last_p1)) ||
-		(sparam(p->last_op) == 1 && invalid_reg(p->last_p2)) ||
-		invalid_reg(p->last_p3))
+	if (bitset_fail(p))
 	{
 		set_pc(p, vm, param_size(p->last_op, p));
 		return (p->carry);
@@ -256,11 +261,9 @@ int		and(struct s_vm *vm, struct s_proc *p)
 		bitset = p->last_p2;
 	else
 		bitset = get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
-	if (vm->verbose & VOPERS)
-		ft_printf("P%5d | and %d %d r%d\n", p->pnum, result, bitset,
-			p->last_p3);
-	result &= bitset;
-	p->regs[p->last_p3 - 1] = result;
+	(vm->verbose & VOPERS) ? ft_printf("P%5d | and %d %d r%d\n", p->pnum,
+		result, bitset, p->last_p3) : 0;
+	p->regs[p->last_p3 - 1] = result & bitset;
 	set_pc(p, vm, param_size(p->last_op, p));
 	return (p->regs[p->last_p3 - 1] == 0);
 }
@@ -270,11 +273,7 @@ int		or(struct s_vm *vm, struct s_proc *p)
 	t_reg	result;
 	t_reg	bitset;
 
-	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
-		tparam(p->last_op) != 1 ||
-		(fparam(p->last_op) == 1 && invalid_reg(p->last_p1)) ||
-		(sparam(p->last_op) == 1 && invalid_reg(p->last_p2)) ||
-		invalid_reg(p->last_p3))
+	if (bitset_fail(p))
 	{
 		set_pc(p, vm, param_size(p->last_op, p));
 		return (p->carry);
@@ -291,11 +290,9 @@ int		or(struct s_vm *vm, struct s_proc *p)
 		bitset = p->last_p2;
 	else
 		bitset = get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
-	if (vm->verbose & VOPERS)
-		ft_printf("P%5d | or %d %d r%d\n", p->pnum, result, bitset,
-			p->last_p3);
-	result |= bitset;
-	p->regs[p->last_p3 - 1] = result;
+	(vm->verbose & VOPERS) ? ft_printf("P%5d | or %d %d r%d\n", p->pnum,
+		result, bitset, p->last_p3) : 0;
+	p->regs[p->last_p3 - 1] = result | bitset;
 	set_pc(p, vm, param_size(p->last_op, p));
 	return (p->regs[p->last_p3 - 1] == 0);
 }
@@ -305,11 +302,7 @@ int		xor(struct s_vm *vm, struct s_proc *p)
 	t_reg	result;
 	t_reg	bitset;
 
-	if (fparam(p->last_op) == 0 || sparam(p->last_op) == 0 ||
-		tparam(p->last_op) != 1 ||
-		(fparam(p->last_op) == 1 && invalid_reg(p->last_p1)) ||
-		(sparam(p->last_op) == 1 && invalid_reg(p->last_p2)) ||
-		invalid_reg(p->last_p3))
+	if (bitset_fail(p))
 	{
 		set_pc(p, vm, param_size(p->last_op, p));
 		return (p->carry);
@@ -326,11 +319,9 @@ int		xor(struct s_vm *vm, struct s_proc *p)
 		bitset = p->last_p2;
 	else
 		bitset = get_int(vm->arena, p->pcount, p->last_p2 % IDX_MOD);
-	if (vm->verbose & VOPERS)
-		ft_printf("P%5d | xor %d %d r%d\n", p->pnum, result, bitset,
-			p->last_p3);
-	result ^= bitset;
-	p->regs[p->last_p3 - 1] = result;
+	(vm->verbose & VOPERS) ? ft_printf("P%5d | xor %d %d r%d\n", p->pnum,
+		result, bitset, p->last_p3) : 0;
+	p->regs[p->last_p3 - 1] = result ^ bitset;
 	set_pc(p, vm, param_size(p->last_op, p));
 	return (p->regs[p->last_p3 - 1] == 0);
 }

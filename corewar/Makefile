@@ -6,7 +6,7 @@
 #    By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2019/02/25 16:43:57 by mhouppin     #+#   ##    ##    #+#        #
-#    Updated: 2019/04/04 10:57:39 by mhouppin    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/04/07 12:21:10 by mhouppin    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -26,7 +26,7 @@ ARCHIVE  := $(LIB)/libft.a
 SOURCES  := $(wildcard ${SRC_DIR}/*.c)
 OBJECTS  := $(patsubst ${SRC_DIR}/%.c,${OBJ_DIR}/%.o,${SOURCES})
 DEPENDS  := $(patsubst ${SRC_DIR}/%.c,${SRC_DIR}/.%.d,${SOURCES})
-CFLAGS   := -Wall -Wextra -O3
+CFLAGS   := -Wall -Wextra -Oz
 CINC     := -I $(subst :, -I ,${INC_DIR})
 CC       := gcc
 INCLUDED := $(shell for deps in ${DEPENDS}; do if [[ -e $$deps ]]; then echo -n "$$deps "; fi; done)
