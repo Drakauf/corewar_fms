@@ -1,9 +1,7 @@
-corewar/corewar
+corewar
 *.o
+*.d
 *.cor
 *.dSYM
-*libft.a
-asm/asm
-output
-routput
-unit-test/test.sh
+libft.a
+asm
