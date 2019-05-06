@@ -6,7 +6,7 @@
 #    By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2019/02/25 16:43:57 by mhouppin     #+#   ##    ##    #+#        #
-#    Updated: 2019/05/03 09:40:58 by mhouppin    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/05/06 11:29:03 by mhouppin    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -77,8 +77,10 @@ CC        = gcc
 QTY      := $(shell echo ${SOURCES} | wc -w)
 CNT      = 0
 COLSET   = 0
+COLWIN   = 0
 SIZE     = 0
-ASIZE    = 100
+ASIZE    = 0
+PERCENT  = 0
 
 
 .PHONY: all clean fclean re allc
@@ -104,9 +106,11 @@ $(NAME): $(OBJ_DIR) $(OBJECTS)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(eval CNT=$(shell echo "$(CNT) + 1" | bc))
 	@$(eval COLSET=$(shell echo "$(CNT) * 255 / $(QTY)" | bc))
-	@$(eval SIZE=$(shell echo "$(CNT) * 100 / $(QTY)" | bc))
-	@$(eval ASIZE=$(shell echo "100 - $(SIZE)" | bc))
-	@printf "[48;2;255;$(COLSET);0m%$(SIZE)s[0m%$(ASIZE)s asm: %d%%\r" "" "" $(SIZE)
+	@$(eval COLWIN=$(shell echo "$$(tput cols) - 15" | bc))
+	@$(eval SIZE=$(shell echo "$(CNT) * $(COLWIN) / $(QTY)" | bc))
+	@$(eval ASIZE=$(shell echo "$(COLWIN) - $(SIZE)" | bc))
+	@$(eval PERCENT=$(shell echo "$(CNT) * 100 / $(QTY)" | bc))
+	@printf "[48;2;255;$(COLSET);0m%$(SIZE)s[0m%$(ASIZE)s asm: %d%%[K[J\r" "" "" $(PERCENT)
 	@$(CC) $(CFLAGS) $(CINC) -MMD -c $< -o $@
 
 # inclusion des regles contenues dans les .d

@@ -6,18 +6,18 @@
 #    By: mhouppin <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2019/02/25 16:43:57 by mhouppin     #+#   ##    ##    #+#        #
-#    Updated: 2019/05/03 09:41:12 by mhouppin    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/05/06 11:29:13 by mhouppin    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
 
-NAME     := ../corewar
-OBJ_DIR  := obj
-SRC_DIR  := src
-INC_DIR  := inc:../libft
-ARCHIVE  := ../libft/libft.a
+NAME	:= ../corewar
+OBJ_DIR	:= obj
+SRC_DIR	:= src
+INC_DIR	:= inc:../libft
+ARCHIVE	:= ../libft/libft.a
 
-SOURCES  := \
+SOURCES	:= \
 	src/champ_intro.c\
 	src/corewar.c\
 	src/exec_calcs.c\
@@ -44,21 +44,19 @@ SOURCES  := \
 	src/struct.c\
 	src/tools.c
 
-OBJECTS  := $(patsubst ${SRC_DIR}/%.c,${OBJ_DIR}/%.o,${SOURCES})
-DEPENDS  := $(patsubst ${SRC_DIR}/%.c,${OBJ_DIR}/%.d,${SOURCES})
-CFLAGS   := -Wall -Wextra -Werror -O3
-CINC     := -I $(subst :, -I ,${INC_DIR}) $(shell sdl2-config --cflags)
-CSDL     := $(shell sdl2-config --libs)
-CC       := gcc
-QTY      := $(shell echo ${SOURCES} | wc -w)
-CNT      = 0
-COLSET   = 0
-SIZE     = 0
-ASIZE    = 100
-
-
-.PHONY: all clean fclean re allc
-
+OBJECTS	:= $(patsubst ${SRC_DIR}/%.c,${OBJ_DIR}/%.o,${SOURCES})
+DEPENDS	:= $(patsubst ${SRC_DIR}/%.c,${OBJ_DIR}/%.d,${SOURCES})
+CFLAGS	:= -Wall -Wextra -Werror -O3
+CINC	:= -I $(subst :, -I ,${INC_DIR}) $(shell sdl2-config --cflags)
+CSDL	:= $(shell sdl2-config --libs)
+CC		:= gcc
+QTY		:= $(shell echo ${SOURCES} | wc -w)
+CNT		= 0
+COLSET	= 0
+COLWIN	= 0
+SIZE	= 0
+ASIZE	= 100
+PERCENT	= 0
 
 all: $(NAME)
 
@@ -75,9 +73,11 @@ $(NAME): $(OBJ_DIR) $(OBJECTS)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(eval CNT=$(shell echo "$(CNT) + 1" | bc))
 	@$(eval COLSET=$(shell echo "$(CNT) * 255 / $(QTY)" | bc))
-	@$(eval SIZE=$(shell echo "$(CNT) * 100 / $(QTY)" | bc))
-	@$(eval ASIZE=$(shell echo "100 - $(SIZE)" | bc))
-	@printf "[48;2;255;$(COLSET);0m%$(SIZE)s[0m%$(ASIZE)s corewar: %d%%\r" "" "" $(SIZE)
+	@$(eval COLWIN=$(shell echo "$$(tput cols) - 15" | bc))
+	@$(eval SIZE=$(shell echo "$(CNT) * $(COLWIN) / $(QTY)" | bc))
+	@$(eval ASIZE=$(shell echo "$(COLWIN) - $(SIZE)" | bc))
+	@$(eval PERCENT=$(shell echo "$(CNT) * 100 / $(QTY)" | bc))
+	@printf "[48;2;255;$(COLSET);0m%$(SIZE)s[0m%$(ASIZE)s corewar: %d%%[K[J\r" "" "" $(PERCENT)
 	@$(CC) $(CFLAGS) $(CINC) -MMD -c $< -o $@
 
 # inclusion des regles contenues dans les .d
@@ -92,3 +92,5 @@ fclean: clean
 re: fclean all
 
 allc: all clean
+
+.PHONY: all clean fclean re allc
