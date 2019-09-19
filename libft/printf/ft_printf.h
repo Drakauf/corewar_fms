@@ -6,7 +6,7 @@
 /*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/19 09:48:49 by fcordon      #+#   ##    ##    #+#       */
-/*   Updated: 2018/12/20 11:26:04 by fcordon     ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/09/19 11:56:41 by fcordon     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -20,8 +20,7 @@
 # include <wchar.h>
 # include <stdio.h>
 # include <string.h>
-# include <_types/_intmax_t.h>
-# include <_types/_uintmax_t.h>
+# include <stdint.h>
 
 # define L_LMAJ		0x1
 # define L_L		0x2
